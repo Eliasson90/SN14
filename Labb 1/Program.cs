@@ -11,142 +11,124 @@ namespace Labb_1
         static void Main(string[] args)
         {
             //skapa variabler
-            int Betalade; 
+            int betalade;
             double totalSumma;
             uint subTotal;
-            int tillbaka; 
-            int resultat;
-            double avrundaSumma; 
+            int tillbaka;            
+            double avrundaSumma;
 
+            do
+            {
+
+                totalSumma = LasPositivDouble("ange Totalsumma      : ");
+                if (totalSumma < 1)
+                {
+                    Console.BackgroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Totalsumman är för liten. Köpet kunde inte genomföras");
+                    Console.ResetColor();
+                    return;
+                }
+
+                subTotal = (uint)Math.Round(totalSumma);
+
+                betalade = LasInt("Ange erhållet belopp : ", (int)subTotal);
+
+                avrundaSumma = subTotal - totalSumma;
+
+                tillbaka = betalade - (int)totalSumma;
+
+                Console.WriteLine("\nKVITTO");
+                Console.WriteLine("--------------------------------------------");
+                Console.WriteLine("{0,-20} : {1,20:c}", "Total", totalSumma);
+                Console.WriteLine("{0,-20} : {1,20:c}", "Avrundning", avrundaSumma);
+                Console.WriteLine("{0,-20} : {1,20:c0}", "Att betala", subTotal);
+                Console.WriteLine("{0,-20} : {1,20:c0}", "Kontant", betalade);
+                Console.WriteLine("{0,-20} : {1,20:c0}", "Tillbaka", tillbaka);
+                Console.WriteLine("--------------------------------------------");
+
+                DelaUppIFaktorer(tillbaka);
+
+                Console.BackgroundColor = ConsoleColor.DarkGreen;
+                Console.WriteLine("\nTryck ESC för att avsluta eller valfri knapp för en ny beräkning.");
+                Console.ResetColor();
+
+            }
+            while (Console.ReadKey(true).Key != ConsoleKey.Escape);
+        }
+
+        public static double LasPositivDouble(string titel)
+        {
+            double tal = 0;
             while (true)
             {
                 try
                 {
-                    Console.Write("ange Totalsumma      :");
-                    totalSumma = double.Parse(Console.ReadLine());
-                    break;
+                    Console.Write(titel);
+                    tal = double.Parse(Console.ReadLine());
 
+                    if (tal > 0)
+                        break;
 
+                    // för litet
                 }
-
-
                 catch
                 {
                     Console.BackgroundColor = ConsoleColor.Red;
                     Console.WriteLine("Var vänlig ange belopp i form av en siffra!");
                     Console.ResetColor();
-
                 }
+
             }
+            return tal;
+        }
+        public static int LasInt(string title, int minValue)
+        {
 
-            if (totalSumma < 1)
-            {
-                Console.BackgroundColor = ConsoleColor.Red;
-                Console.WriteLine("Totalsumman är för liten. Köpet kunde inte genomföras");
-                Console.ResetColor();
-                return;
-            }
-
-
-
-
+            int tal = 0;
             while (true)
             {
                 try
                 {
-                    Console.Write("Ange erhållet belopp :");
-                    Betalade = int.Parse(Console.ReadLine());
-                    break;
+                    Console.Write(title);
+                    tal = int.Parse(Console.ReadLine());
 
 
+                    if (tal >= minValue)
+                    {
+                        break;
+                    }
 
+                    Console.BackgroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Fel! {0} för litet.", tal);
+                    Console.ResetColor();
                 }
-
-
-
                 catch
                 {
                     Console.BackgroundColor = ConsoleColor.Red;
                     Console.Write("Var vänlig ange belopp i from av en heltals-siffra!");
                     Console.ResetColor();
-
                 }
             }
-
-            if (totalSumma > Betalade)
+            return tal;
+        }
+        public static void DelaUppIFaktorer(int vaxel)
+        {
+            int[] typAvPengar = { 500, 100, 50, 20, 5, 1 };
+            string[] typ = { "lappar", "lappar", "lappar", "lappar", "kronor", "kronor" };
+            int mangdAvPengar;
+         
+            for (int i = 0; i < typAvPengar.Count(); i++)
             {
-                Console.BackgroundColor = ConsoleColor.Red;
-                Console.WriteLine("Betalning för liten. Köpet kunde inte genomföras");
-                Console.ResetColor();
-                return;
+                mangdAvPengar = vaxel / typAvPengar[i];
+                vaxel = vaxel % typAvPengar[i];
+
+                if (mangdAvPengar > 0)
+                {
+                    Console.WriteLine("{0,4}-{1}  :  {2}", typAvPengar[i], typ[i], mangdAvPengar);
+                }
             }
-
-            Console.WriteLine("\nKVITTO");
-            Console.WriteLine("--------------------------------------------");
-
-            Console.WriteLine("{0,-20} : {1,20:c}", "Total", totalSumma);
-            //Avrunda
-            subTotal = (uint)Math.Round(totalSumma);
-            avrundaSumma = subTotal - totalSumma;
-            Console.WriteLine("{0,-20} : {1,20:c}", "Avrundning", avrundaSumma);
-
-            //växel
-            tillbaka = Betalade - (int)totalSumma;
-            Console.WriteLine("{0,-20} : {1,20:c0}", "Att betala", subTotal);
-            Console.WriteLine("{0,-20} : {1,20:c0}", "Kontant", Betalade);
-            Console.WriteLine("{0,-20} : {1,20:c0}", "Tillbaka", tillbaka);
-
-            Console.WriteLine("--------------------------------------------");
-            // Antal lappar tillbaka
-            resultat = tillbaka / 500;
-
-            if (resultat > 0)
-            {
-                Console.WriteLine("{0,-20} : {1,17}","500-lappar", resultat);
-                tillbaka = tillbaka % 500;
-            }
-
-            resultat = tillbaka / 100;
-
-            if (resultat > 0)
-            {
-                Console.WriteLine("{0,-20} : {1,17}","100-lappar", resultat);
-                tillbaka = tillbaka % 100;
-            }
-
-            resultat = tillbaka / 50;
-
-            if (resultat > 0)
-            {
-                Console.WriteLine("{0,-20} : {1,17}","50-lappar", resultat);
-                tillbaka = tillbaka % 50;
-            }
-
-            resultat = tillbaka / 20;
-
-            if (resultat > 0)
-            {
-                Console.WriteLine("{0,-20} : {1,17}","20-lappar", resultat);
-                tillbaka = tillbaka % 20;
-            }
-
-            resultat = tillbaka / 5;
-
-            if (resultat > 0)
-            {
-                Console.WriteLine("{0,-20} : {1,17}","5-kronor", resultat);
-                tillbaka = tillbaka % 5;
-            }
-
-            resultat = tillbaka / 1;
-
-            if (resultat > 0)
-            {
-                Console.WriteLine("{0,-20} : {1,17}","1-kronor", resultat);
-                tillbaka = tillbaka % 1;
-            }
-
         }
     }
 }
+
 
