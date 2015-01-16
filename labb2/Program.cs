@@ -10,7 +10,6 @@ namespace labb2
     {
         static void Main(string[] args)
         {
-
             //rader
             for (int row = 0; row < 25; row++)
             {
