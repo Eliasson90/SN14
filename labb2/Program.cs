@@ -11,7 +11,6 @@ namespace labb2
         static void Main(string[] args)
         {
 
-
             //rader
             for (int row = 0; row < 25; row++)
             {
@@ -34,29 +33,20 @@ namespace labb2
                     case 2:
                         Console.ForegroundColor = ConsoleColor.Green;
                         break;
-                    
                 }
-
-               
 
                 // kolumner
                 for (int col = 0; col < 39; col++)
                 {
-
                     Console.Write("* ");
-
-                   
                 }
                 //reseta färgen
                 Console.ResetColor();
                 //skriv ut press to continue
                 Console.WriteLine();
-                
             }
-
-            
         }
-        
+
     }
 }
 
