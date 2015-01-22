@@ -10,7 +10,15 @@ namespace solid
     {
        private static Solid CreateSolid(SolidType solidType)
             {
+                switch (solidType)
+                {
+                    case SolidType.CircularCone:
+                        return new CircularCone();
+                    case SolidType.Cylinder:
+                        return new Cylinder();
 
+                   
+                }
             }
 
         static void Main(string[] args)
@@ -25,7 +33,7 @@ namespace solid
 
         private static void ViewMenu()
         {
-
+            
         }
 
         private static void ViewSolidDetail(Solid solid)

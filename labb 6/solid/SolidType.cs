@@ -7,7 +7,8 @@ namespace solid
 {
     public enum SolidType
     {
-        CircularClone,
+        Unsigned,
+        CircularCone,
         Cylinder,
     }
 }

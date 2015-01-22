@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 
 namespace solid
 {
-    public class cylinder :Solid
+    public class Cylinder : Solid
     {
         public double BaseArea { get;}
         public double SurfaceArea { get;}
         public double Volume { get;}
 
-       public cylinder(double radius, double height)
+       public Cylinder(double radius, double height)
+           :base(radius, height)
         {
 
         }

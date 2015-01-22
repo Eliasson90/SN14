@@ -13,6 +13,7 @@ namespace solid
         public double Volume { get;}
 
        public CircularCone(double radius, double height)
+           :base(radius, height)
         {
 
         }
