@@ -44,20 +44,20 @@ namespace Kylskåp
        }
 
        public Cooler()
-           : this()
+           : this(0, 0)
        {
 
        }
 
-       public Cooler(decimal temperature, decimal targetTemperature)
-           : this()
+       public Cooler(decimal insideTemperature, decimal targetTemperature)
+           : this(insideTemperature, targetTemperature, false, false)
        {
 
        }
 
-       public Cooler(decimal temperature, decimal targetTemperature, bool isOn, bool doorIsOpen)
+       public Cooler(decimal insideTemperature, decimal targetTemperature, bool isOn, bool doorIsOpen)
        {
-           InsideTemperature = temperature;
+           InsideTemperature = insideTemperature;
            TargetTemperature = targetTemperature;
            IsOn = isOn;
            DoorIsOpen = doorIsOpen;
@@ -65,12 +65,36 @@ namespace Kylskåp
 
        public void Tick()
        {
+           if (IsOn == true && DoorIsOpen == true)
+           {
+                InsideTemperature += 0.2m;
+                TargetTemperature++;
+           }
+           if (IsOn == true && DoorIsOpen == false)
+           {
+                InsideTemperature -= 0.2m;
+                TargetTemperature++;
+           }
+
+           if (IsOn == false && DoorIsOpen == true)
+           {
+                InsideTemperature += 0.5m;
+                TargetTemperature++;
+           }
+         
+           else
+           {
+                InsideTemperature += 0.1m;
+                TargetTemperature++;
+           }                    
 
        }
 
        public override string ToString()
        {
-           return string.Format("", _insideTemperature, _targetTemperature);
+           string on = IsOn  ? "ON" : "OF";
+           string open = DoorIsOpen ? "öppen" : "stängd";
+           return string.Format("{[0]} : {0:m} : {(0:m)} - {0}", on, InsideTemperature, TargetTemperature, open);
        }
     }
 }

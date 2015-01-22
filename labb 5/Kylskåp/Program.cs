@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace Kylskåp
 {
-     class Program
+    public class Program
     {
-        string HorizontalLine;
-
         static void Main(string[] args)
         {
             Cooler cooler = new Cooler();
@@ -18,14 +16,14 @@ namespace Kylskåp
 
         }
 
-        static void Run(Cooler cooler, int minutes)
+       private  static void Run(Cooler cooler, int minutes)
         {
-
+           
         }
 
         static void ViewErrorMessage(string message)
         {
-
+           
         }
 
         static void ViewTestHeader(string header)
