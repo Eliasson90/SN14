@@ -8,9 +8,9 @@ namespace solid
 {
    public class CircularCone : Solid
     {
-        public double BaseArea { get;}
-        public double SurfaceArea { get;}
-        public double Volume { get;}
+       public override double BaseArea { get { return Math.PI * RadiusSquared; } }
+       public override double SurfaceArea { get { return Math.PI * Radius * (Radius + Math.Sqrt(RadiusSquared * HeightSquared)); } }
+       public override double Volume { get { return 1 / 3 * Math.PI * RadiusSquared * Height; } }
 
        public CircularCone(double radius, double height)
            :base(radius, height)

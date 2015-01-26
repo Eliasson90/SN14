@@ -8,9 +8,9 @@ namespace solid
 {
     public class Cylinder : Solid
     {
-        public double BaseArea { get;}
-        public double SurfaceArea { get;}
-        public double Volume { get;}
+        public override double BaseArea { get { return Math.PI * RadiusSquared; } }
+        public override double SurfaceArea { get { return 2 * Math.PI * Radius * (Height + Radius); } }
+        public override double Volume { get { return Math.PI * RadiusSquared * Height; } }
 
        public Cylinder(double radius, double height)
            :base(radius, height)
