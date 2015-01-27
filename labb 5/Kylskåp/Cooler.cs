@@ -93,7 +93,7 @@ namespace Kylskåp
        {
            string on = IsOn  ? "ON" : "OF";
            string open = DoorIsOpen ? "öppen" : "stängd";
-           return string.Format("{[0]} : {0:m} : {(0:m)} - {0}", on, InsideTemperature, TargetTemperature, open);
+           return string.Format("[{0}] : {1:f1} : ({2:f1}) - {3}", on, InsideTemperature, TargetTemperature, open);
        }
     }
 }
