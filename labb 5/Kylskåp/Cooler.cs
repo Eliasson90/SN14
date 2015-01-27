@@ -65,29 +65,28 @@ namespace Kylskåp
 
        public void Tick()
        {
-           if (IsOn == true && DoorIsOpen == true)
+           if (IsOn)
            {
-                InsideTemperature += 0.2m;
-                TargetTemperature++;
+               if (DoorIsOpen)
+               {
+                   InsideTemperature += 0.2M;
+               }
+               else
+               {
+                   InsideTemperature -= 0.2M;
+               }
            }
-           if (IsOn == true && DoorIsOpen == false)
-           {
-                InsideTemperature -= 0.2m;
-                TargetTemperature++;
-           }
-
-           if (IsOn == false && DoorIsOpen == true)
-           {
-                InsideTemperature += 0.5m;
-                TargetTemperature++;
-           }
-         
            else
            {
-                InsideTemperature += 0.1m;
-                TargetTemperature++;
-           }                    
-
+               if (DoorIsOpen)
+               {
+                   InsideTemperature += 0.5M;
+               }
+               else
+               {
+                   InsideTemperature += 0.1M;
+               }
+           }
        }
 
        public override string ToString()
