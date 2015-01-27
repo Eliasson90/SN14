@@ -35,7 +35,6 @@ namespace solid
                     break;
             }
 
-
             double radius = ReadDoubleGreaterThanZero("Ange radie (r): ");
             double height = ReadDoubleGreaterThanZero("Ange höjd (h) : ");
 
@@ -47,7 +46,6 @@ namespace solid
                     return new Cylinder(radius, height);
                 default:
                     return null;
-
             }
         }
 
@@ -79,35 +77,18 @@ namespace solid
                 }
 
 
-
                 switch (menyVal)
                 {
                     case 0:
                         return;
 
                     case 1:
-                        //Console.Clear();
-                        //Console.BackgroundColor = ConsoleColor.DarkGreen;
-                        //Console.ForegroundColor = ConsoleColor.White;
-                        //Console.WriteLine(" ╔═══════════════════════════════════╗ ");
-                        //Console.WriteLine(" ║              Cone                 ║ ");
-                        //Console.WriteLine(" ╚═══════════════════════════════════╝ ");
-                        //Console.ResetColor();
-                        //Console.WriteLine();
                         ViewSolidDetail(CreateSolid(SolidType.CircularCone));
 
                         break;
-                    case 2:
-                        //Console.Clear();
-                        //Console.BackgroundColor = ConsoleColor.DarkGreen;
-                        //Console.ForegroundColor = ConsoleColor.White;
-                        //Console.WriteLine();
-                        //Console.WriteLine(" ╔═══════════════════════════════════╗ ");
-                        //Console.WriteLine(" ║             Cylinder              ║ ");
-                        //Console.WriteLine(" ╚═══════════════════════════════════╝ ");
-                        //Console.ResetColor();
-                        //Console.WriteLine();
+                    case 2:                    
                         ViewSolidDetail(CreateSolid(SolidType.Cylinder));
+
                         break;
                 }
 
@@ -117,11 +98,9 @@ namespace solid
                 Console.WriteLine("Tryck på valfri tagent för att börja om - ESC avslutar.");
                 Console.ResetColor();
 
-
             } while (Console.ReadKey(true).Key != ConsoleKey.Escape);
         }
             
-
         private static double ReadDoubleGreaterThanZero(string prompt)
         {
             double number;
