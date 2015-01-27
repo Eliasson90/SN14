@@ -26,7 +26,7 @@ namespace solid
             }
 
         }
-        public double HeightSquared { get { return Height * Height; } }
+        public double HeightSquared { get { return _height * _height; } }
 
         public double Radius
         {
@@ -41,7 +41,7 @@ namespace solid
                 _radius = value;
             }
         }
-        public double RadiusSquared { get { return Radius * Radius; } }
+        public double RadiusSquared { get { return _radius * _radius; } }
         public abstract double SurfaceArea { get; }
         public abstract double Volume { get; }
 
@@ -53,7 +53,14 @@ namespace solid
 
         public override string ToString()
         {
-            return string.Format("Radie (r) :  {0}\nHöjd (h) :  {1}\nVolym :  {2}\nBasarea :  {3}\nYtarea :  {4}", Radius, Height, Volume, BaseArea, SurfaceArea);
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat("Radie (r)  :  {0, 10:f2}\n", Radius);
+            sb.AppendFormat("Höjd (h)   :  {0, 10:f2}\n", Height);
+            sb.AppendFormat("Volym      :  {0, 10:f2}\n", Volume);
+            sb.AppendFormat("Basarea    :  {0, 10:f2}\n", BaseArea);
+            sb.AppendFormat("Ytarea     :  {0, 10:f2}\n", SurfaceArea);
+            return sb.ToString();            
         }
+       
     }
 }

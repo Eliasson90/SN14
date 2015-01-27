@@ -10,15 +10,41 @@ namespace solid
     {
         private static Solid CreateSolid(SolidType solidType)
         {
-            double radius = ReadDoubleGreaterThanZero("Ange radie (r):");
-            double height = ReadDoubleGreaterThanZero("Ange höjd (h):");
-            
+
             switch (solidType)
             {
                 case SolidType.CircularCone:
-                    return new CircularCone(height, radius);
+                    Console.Clear();
+                    Console.BackgroundColor = ConsoleColor.DarkGreen;
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine(" ╔═══════════════════════════════════╗ ");
+                    Console.WriteLine(" ║              Cone                 ║ ");
+                    Console.WriteLine(" ╚═══════════════════════════════════╝ ");
+                    Console.ResetColor();
+                    Console.WriteLine();
+                    break;
                 case SolidType.Cylinder:
-                    return new Cylinder(height, radius);
+                    Console.Clear();
+                    Console.BackgroundColor = ConsoleColor.DarkGreen;
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine(" ╔═══════════════════════════════════╗ ");
+                    Console.WriteLine(" ║             Cylinder              ║ ");
+                    Console.WriteLine(" ╚═══════════════════════════════════╝ ");
+                    Console.ResetColor();
+                    Console.WriteLine();
+                    break;
+            }
+
+
+            double radius = ReadDoubleGreaterThanZero("Ange radie (r): ");
+            double height = ReadDoubleGreaterThanZero("Ange höjd (h) : ");
+
+            switch (solidType)
+            {
+                case SolidType.CircularCone:
+                    return new CircularCone(radius, height);
+                case SolidType.Cylinder:
+                    return new Cylinder(radius, height);
                 default:
                     return null;
 
@@ -27,68 +53,74 @@ namespace solid
 
         static void Main(string[] args)
         {
-            int menyVal;
+            int menyVal = 0;
 
             do
             {
                 ViewMenu();
-                while (true)
+
+                try
                 {
-                    try
+                    menyVal = int.Parse(Console.ReadLine());
+                    if (menyVal < 0 || menyVal > 2)
                     {
-                        menyVal = int.Parse(Console.ReadLine());
-                        if (menyVal < 0 || menyVal > 2)
-                        {
-                            throw new ArgumentException();
-                        }
-                        break;
+                        throw new ArgumentException();
                     }
-                    catch
-                    {
-                        Console.WriteLine();
-                        Console.BackgroundColor = ConsoleColor.Red;
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.WriteLine("FEL! Ange ett nummer mellan 0-2.");
-                        Console.ResetColor();
-                        Console.BackgroundColor = ConsoleColor.DarkBlue;
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.WriteLine();
-                        Console.WriteLine("Tryck på valfri tangent för att börja om - ESC avslutar.");
-                        Console.ResetColor();                        
-                        ViewMenu();
-                    } while (Console.ReadKey(true).Key != ConsoleKey.Escape);
+                   
                 }
+                catch
+                {
+                    Console.WriteLine();
+                    Console.BackgroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine("FEL! Ange ett nummer mellan 0-2.");
+                    Console.ResetColor();
+
+                }
+
+
+
                 switch (menyVal)
                 {
                     case 0:
                         return;
 
                     case 1:
-                        Console.BackgroundColor = ConsoleColor.DarkGreen;
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.WriteLine(" ╔═══════════════════════════════════╗ ");
-                        Console.WriteLine(" ║              Cone                 ║ ");
-                        Console.WriteLine(" ╚═══════════════════════════════════╝ ");
-                        Console.ResetColor();
-                        Console.WriteLine();
+                        //Console.Clear();
+                        //Console.BackgroundColor = ConsoleColor.DarkGreen;
+                        //Console.ForegroundColor = ConsoleColor.White;
+                        //Console.WriteLine(" ╔═══════════════════════════════════╗ ");
+                        //Console.WriteLine(" ║              Cone                 ║ ");
+                        //Console.WriteLine(" ╚═══════════════════════════════════╝ ");
+                        //Console.ResetColor();
+                        //Console.WriteLine();
                         ViewSolidDetail(CreateSolid(SolidType.CircularCone));
 
                         break;
                     case 2:
-                        Console.BackgroundColor = ConsoleColor.DarkGreen;
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.WriteLine();
-                        Console.WriteLine(" ╔═══════════════════════════════════╗ ");
-                        Console.WriteLine(" ║             Cylinder              ║ ");
-                        Console.WriteLine(" ╚═══════════════════════════════════╝ ");
-                        Console.ResetColor();
-                        Console.WriteLine();
+                        //Console.Clear();
+                        //Console.BackgroundColor = ConsoleColor.DarkGreen;
+                        //Console.ForegroundColor = ConsoleColor.White;
+                        //Console.WriteLine();
+                        //Console.WriteLine(" ╔═══════════════════════════════════╗ ");
+                        //Console.WriteLine(" ║             Cylinder              ║ ");
+                        //Console.WriteLine(" ╚═══════════════════════════════════╝ ");
+                        //Console.ResetColor();
+                        //Console.WriteLine();
                         ViewSolidDetail(CreateSolid(SolidType.Cylinder));
                         break;
                 }
 
-            } while (true);
+                Console.BackgroundColor = ConsoleColor.DarkBlue;
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine();
+                Console.WriteLine("Tryck på valfri tagent för att börja om - ESC avslutar.");
+                Console.ResetColor();
+
+
+            } while (Console.ReadKey(true).Key != ConsoleKey.Escape);
         }
+            
 
         private static double ReadDoubleGreaterThanZero(string prompt)
         {
@@ -124,7 +156,7 @@ namespace solid
             Console.BackgroundColor = ConsoleColor.DarkGreen;
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine(" ╔═══════════════════════════════════╗ ");
-            Console.WriteLine(" ║        Solida volymer            ║ ");
+            Console.WriteLine(" ║          Solida volymer           ║ ");
             Console.WriteLine(" ╚═══════════════════════════════════╝ ");
             Console.ResetColor();
             Console.WriteLine();
@@ -147,12 +179,6 @@ namespace solid
             Console.WriteLine();
             Console.WriteLine(solid.ToString());
             Console.WriteLine("\n ═══════════════════════════════════════════\n");
-            Console.BackgroundColor = ConsoleColor.DarkBlue;
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine();
-            Console.WriteLine("Tryck på valfri tagent för att börja om - ESC avslutar.");
-            Console.ResetColor();            
-            Console.Clear();
-        }//while (Console.ReadKey(true).Key != ConsoleKey.Escape);
+        }
     }
 }
