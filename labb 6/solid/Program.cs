@@ -76,7 +76,7 @@ namespace solid
 
                 }
 
-
+                if(menyVal == 1 || menyVal == 2)
                 switch (menyVal)
                 {
                     case 0:
@@ -111,7 +111,7 @@ namespace solid
                 try
                 {
                     number = double.Parse(Console.ReadLine());
-                    if (number < 1)
+                    if (number <= 0)
                     {
                         throw new ArgumentException();
                     }
