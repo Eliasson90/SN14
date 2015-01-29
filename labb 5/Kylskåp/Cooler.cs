@@ -10,7 +10,7 @@ namespace Kylskåp
     {
        private decimal _insideTemperature;
        private decimal _targetTemperature;
-       private const decimal OutsideTemperature = 23;
+       private const decimal OutsideTemperature = 23.7m;
 
        public bool DoorIsOpen { get; set; }
 
@@ -65,27 +65,36 @@ namespace Kylskåp
 
        public void Tick()
        {
-           if (IsOn)
+           decimal change = 0.0m;
+
+           if (IsOn == true && DoorIsOpen == false)
            {
-               if (DoorIsOpen)
-               {
-                   InsideTemperature += 0.2M;
-               }
-               else
-               {
-                   InsideTemperature -= 0.2M;
-               }
+               change = -0.2m;
+           }
+           else if (IsOn == true && DoorIsOpen == true)
+           {
+               change += 0.2m;
+           }
+           else if (IsOn == false && DoorIsOpen == false)
+           {
+               change += 0.1m;
+           }
+           else if (IsOn == false && DoorIsOpen == true)
+           {
+               change += 0.5m;
+           }
+
+           if (InsideTemperature + change < TargetTemperature)
+           {
+               InsideTemperature = TargetTemperature;
+           }
+           else if (InsideTemperature + change > OutsideTemperature)
+           {
+               InsideTemperature = OutsideTemperature;
            }
            else
            {
-               if (DoorIsOpen)
-               {
-                   InsideTemperature += 0.5M;
-               }
-               else
-               {
-                   InsideTemperature += 0.1M;
-               }
+               InsideTemperature += change;
            }
        }
 
@@ -93,7 +102,7 @@ namespace Kylskåp
        {
            string on = IsOn  ? "ON" : "OF";
            string open = DoorIsOpen ? "öppen" : "stängd";
-           return string.Format("[{0}] : {1:f1} : ({2:f1}) - {3}", on, InsideTemperature, TargetTemperature, open);
+           return string.Format("[{0}] : {1:f1}°C : ({2:f1}°C) - {3}", on, InsideTemperature, TargetTemperature, open);
        }
     }
 }
