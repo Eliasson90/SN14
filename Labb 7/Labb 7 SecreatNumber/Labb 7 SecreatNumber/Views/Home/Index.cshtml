@@ -1,0 +1,72 @@
+﻿@model Labb_7_SecreatNumber.Models.SecretNumber
+          
+
+
+@{
+    ViewBag.Title = "Gissa det hemliga talet";
+    
+}
+
+
+    <div class="container">
+        <h2 class="header">Gissa det hemliga talet!</h2>
+        <div class="border" style="background-color: lightgray; height: 30px; border-radius: 2px 2px;"></div>
+        @using (Html.BeginForm())
+        {
+            if (Model.LastGuessedNumber.Outcome != Labb_7_SecreatNumber.Models.Outcome.Right)
+            {
+                <h3>@Model.GuessText</h3>
+                @Html.ValidationSummary()
+                @Html.AntiForgeryToken()
+                <div>
+                    <p>
+                        <strong class="pull-left">Gissa ett tal mellan 1 och 100</strong>
+                        <input class="pull-left input-sm" type="text" style="width:50px; margin: 1px 8px;" name="number" autofocus disabled="@(!Model.CanMakeGuess)" />
+                        <button class="btn btn-primary" type="submit" disabled="@(!Model.CanMakeGuess)">Skicka Gissning</button>
+                    </p>
+                </div>
+            }
+            else
+            {
+                <h3><strong>Rätt Gissat!</strong></h3>
+            }
+        }
+
+        @if (Model.Count > 0)
+        {
+
+            int number = 1;
+            <p>@Model.GetMessage(Model.LastGuessedNumber.Outcome)</p>
+            <div style="border:1px solid black;text-align:center;display:inline-block">
+                @foreach (var guess in Model.GuessedNumbers)
+                {
+                    <div style="width:40px;float:left;">
+                        <div style="background-color:black;color:white;">@number</div>
+
+                        @switch (guess.Outcome)
+                        {
+                            case Labb_7_SecreatNumber.Models.Outcome.Right:
+                                <div class="alert-success">&#10003;<br />@guess.Number</div>
+                                break;
+                            case Labb_7_SecreatNumber.Models.Outcome.High:
+                            <div class="alert-danger">&darr;<br />@guess.Number</div>
+                                break;
+                            case Labb_7_SecreatNumber.Models.Outcome.Low:
+                            <div class="alert-warning">&uarr;<br />@guess.Number</div>
+                                break;
+                        }
+                    </div>
+                        number++;
+                }
+            </div>
+
+
+        }
+        <div class="clearfix"></div>
+        @Html.ActionLink("Slumpa nytt hemligt tal!", "NewPage")
+
+        <div class="border" style="height: 5px; margin: 8px 0 8px 0; background-color: lightgrey;"></div>
+        <div class="footer"><p class="form-group">© 2015 - Gissa det hemliga talet! Av: Robin Eliasson SN14 Kalmar</p></div>
+
+
+    </div>
