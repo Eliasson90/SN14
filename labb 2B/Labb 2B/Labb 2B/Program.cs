@@ -77,7 +77,7 @@ namespace Labb_2B
             {
                 for (int j = cols - i; j >= 0; j -= 2)
                 {
-                    Console.Write("  ");
+                    Console.Write(" ");
                 }
 
                 for (int k = 0; k <= i; k++)
