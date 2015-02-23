@@ -103,38 +103,49 @@ namespace Labb_7_SecreatNumber.Models
         public Outcome MakeGuess(int guess)
         {
 
-            _lastGuessedNumber.Number = guess;
 
 
-            if (guess == _number)
-            {
-                _lastGuessedNumber.Outcome = Outcome.Right;
-            }
-
-            else if (guess > _number)
-            {
-                _lastGuessedNumber.Outcome = Outcome.High;
-
-            }
-            else
-            {
-                _lastGuessedNumber.Outcome = Outcome.Low;
-            }
 
             if (guess < 1 || guess > 100)
             {
                 throw new ArgumentOutOfRangeException();
             }
+            _lastGuessedNumber.Number = guess;
 
-            if (_guessedNumbers.Any(n => n.Number == guess))
+            if (CanMakeGuess)
             {
-                _lastGuessedNumber.Outcome = Outcome.OldGuess;
+                if (_guessedNumbers.Any(n => n.Number == guess))
+                {
+
+                    _lastGuessedNumber.Outcome = Outcome.OldGuess;
+
+                }
+
+                else
+                {
+                    if (guess == _number)
+                    {
+                        _lastGuessedNumber.Outcome = Outcome.Right;
+                    }
+
+                    else if (guess > _number)
+                    {
+                        _lastGuessedNumber.Outcome = Outcome.High;
+
+                    }
+                    else
+                    {
+                        _lastGuessedNumber.Outcome = Outcome.Low;
+                    }
+
+                    _guessedNumbers.Add(_lastGuessedNumber);
+
+                }
             }
-            _guessedNumbers.Add(_lastGuessedNumber);
+                return _lastGuessedNumber.Outcome;
+            }
+        
 
-            return _lastGuessedNumber.Outcome;
-
-        }
 
         public SecretNumber()
         {
@@ -188,11 +199,11 @@ namespace Labb_7_SecreatNumber.Models
             switch (outcome)
             {
                 case Outcome.Right:
-                    return String.Format("Grattis, du klarade det på {0} försöket!", GuessText);
+                    return String.Format("Grattis, du klarade det på {0}", GuessText);
                 case Outcome.OldGuess:
                     return String.Format("Du har redan gissat på {0}, välj ett annat tal.", LastGuessedNumber.Number);
                 case Outcome.High:
-                    message = String.Format("{0} är för lågt.", LastGuessedNumber.Number);
+                    message = String.Format("{0} är för Högt.", LastGuessedNumber.Number);
                     break;
                 case Outcome.Low:
                     message = String.Format("{0} är för lågt.", LastGuessedNumber.Number);
