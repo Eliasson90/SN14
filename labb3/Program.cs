@@ -40,8 +40,21 @@ namespace labb3
                 try
                 {
                     int amount = int.Parse(input);
-                    return amount;
+
+
+                    if (amount < 0)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Ange ett postitivt tal");
+                        Console.ResetColor();
+
+                    }
+                    else
+                    {
+                        return amount;
+                    }
                 }
+               
                 catch (FormatException)
                 {
                     Console.BackgroundColor = ConsoleColor.Red;
@@ -49,29 +62,31 @@ namespace labb3
                     Console.WriteLine();
                     Console.ResetColor();
                 }
+                
             }
         }
         //uträkningarna
         static void ProcessSalaries(int count)
         {
             //Variabler
-            int[] salaries = new int[count];
-            int[] sortedSalaries = new int[count];
+            int[] salaries = new int[count];                      
             double averageSalary;
             int spreadSalary;
             double medianSalary;
             int middle;
-
+            
             for (int i = 0; i < salaries.Length; i++)
             {
                 salaries[i] = ReadInt(string.Format("Ange lön nummer {0}: ", i + 1));
             }
+            
             //medelvärde
-            averageSalary = Convert.ToDouble(salaries.Sum()) / salaries.Length;
+            averageSalary = salaries.Average();
             //spridning
             spreadSalary = salaries.Max() - salaries.Min();
             //sortera ordning
-            sortedSalaries = (int[])salaries.Clone();
+            int[] sortedSalaries = new int[count];
+            Array.Copy(salaries, sortedSalaries, count);
             Array.Sort(sortedSalaries);
             //Median
             middle = sortedSalaries.Length / 2;
