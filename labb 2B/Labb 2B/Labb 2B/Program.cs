@@ -47,6 +47,7 @@ namespace Labb_2B
                 {
                     Console.Write(Title);
                     number = byte.Parse(Console.ReadLine());
+                   
 
                     if (number % 2 == 0 || number < MinBas && number > MaxBas)
                     {
@@ -55,6 +56,7 @@ namespace Labb_2B
                         Console.ResetColor();
                         continue;
                     }
+
                     else
                     {
                         return number;
@@ -63,8 +65,11 @@ namespace Labb_2B
                 }
                 catch
                 {
-                    throw new ArgumentException();
+                    Console.BackgroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Kan ej tolkas som ett tal!");
+                    Console.ResetColor();
                 }
+                
             }
 
         }
