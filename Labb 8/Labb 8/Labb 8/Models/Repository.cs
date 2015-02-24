@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Xml.Linq;
 
 namespace Labb_8.Models
 {
-    public class Repository
+    public class Repository : Labb_8.Models.IRepository
     {
     private static readonly string PhysicalPath;
         private XDocument _document;
@@ -27,18 +28,20 @@ namespace Labb_8.Models
             PhysicalPath = Path.Combine(dataDir.ToString(), "contacts.Xml");
         }
 
-        public List<Contact> GetALContacts()
+        public List<Contact> GetAllContacts()
         {
           
             var contact = Document.Descendants("Contact")
                 .Select(element => new Contact
                 {
-                    ContactId = Guid.Parse(element.Attribute("Id").Value),
+                    ContactId = Guid.Parse(element.Element("Id").Value),
                     FirstName = element.Element("FirstName").Value,
                     LastName = element.Element("LastName").Value,
                     Email = element.Element("Email").Value,
+                    Datum = DateTime.Parse(element.Element("Datum").Value),
+                    
                 })
-                .OrderBy(x => x.Name)
+                .OrderByDescending(x => x.Datum)
                 .ToList();
 
             return contact;
@@ -47,33 +50,30 @@ namespace Labb_8.Models
         public Contact GetContactById(Guid id)
         {
             var contact = Document.Descendants("Contact")
-                .Where(element => Guid.Parse(element.Attribute("Id").Value) == id)
+                .Where(element => Guid.Parse(element.Element("Id").Value) == id)
                  .Select(element => new Contact
                  {
-                     ContactId = Guid.Parse(element.Attribute("Id").Value),
+                     ContactId = Guid.Parse(element.Element("Id").Value),
                      FirstName = element.Element("FirstName").Value,
                      LastName = element.Element("LastName").Value,
                      Email = element.Element("Email").Value,
+                     Datum = DateTime.Parse(element.Element("Datum").Value),
+                    
                  })
                  .FirstOrDefault();
 
             return contact;
         }
 
-    //    public List<Contact> GetLastContacts([int count = 20])
-    //{
-
-    //}
-
-
         public void Add(Contact contact)
         {
           
             var element = new XElement("Contact",
-                new XAttribute("Id", contact.ContactId.ToString()),
-                new XElement("Förnamn", contact.FirstName),
-                new XElement("Efternamn", contact.LastName),
+                new XElement("Id", contact.ContactId.ToString()),
+                new XElement("FirstName", contact.FirstName),
+                new XElement("LastName", contact.LastName),
                 new XElement("Email", contact.Email),
+                new XElement("Datum", contact.Datum.ToShortDateString())               
                 );
 
 
@@ -89,21 +89,22 @@ namespace Labb_8.Models
            }
 
            var element = Document.Descendants("Contact")
-               .Where(el => Guid.Parse(el.Attribute("Id").Value) == contact.Contactid)               
+               .Where(el => Guid.Parse(el.Element("Id").Value) == contact.ContactId)               
                 .FirstOrDefault();
 
             if(element != null)
             {
-                element.Element("Förnamn").Value = contact.FirstName;
-                element.Element("Efternamn").Value = contact.LastName;
+                element.Element("FirstName").Value = contact.FirstName;
+                element.Element("LastName").Value = contact.LastName;
                 element.Element("Email").Value = contact.Email;
+                
             }
         }
 
         public void Delete(Contact contact)
         {
             var elementToDelete = Document.Descendants("Contact")
-                .Where(element => Guid.Parse(element.Attribute("Id").Value) == contact.ContactId)
+                .Where(element => Guid.Parse(element.Element("Id").Value) == contact.ContactId)
                 .FirstOrDefault();
 
             if(elementToDelete != null)

@@ -6,7 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Xml.Linq;
 using Labb_8.Models;
-using Labb_8.Models.Repository;
+
 
 namespace Labb_8.Controllers
 {
@@ -15,7 +15,7 @@ namespace Labb_8.Controllers
      private IRepository _repository;
 
         public ContactController()
-            : this(new XmlRepository())
+            : this(new Repository())
         {
         }
 
@@ -29,7 +29,7 @@ namespace Labb_8.Controllers
         // GET: /Products/
         public ActionResult Index()
         {
-            var contact = _repository.GetContact();            
+            var contact = _repository.GetAllContacts();         
             return View(contact);
         }
 
@@ -47,10 +47,10 @@ namespace Labb_8.Controllers
 	{	        
 		if(ModelState.IsValid)
             {
-                _repository.AddContact(contact);
+                _repository.Add(contact);
                 _repository.Save();
 
-                TempData["success"] = "Produkten sparad!";
+                TempData["success"] = "Kontkten sparad!";
 
                 return RedirectToAction("Index");
             }
@@ -69,13 +69,13 @@ namespace Labb_8.Controllers
         {
             if(!id.HasValue)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                throw new HttpException(404, "Du begärde ett oglitigt GUID");
             }
 
-            var contact = _repository.GetContact(id.Value);
+            var contact = _repository.GetContactById(id.Value);
             if(contact == null)
             {
-                return HttpNotFound();
+                throw new HttpException(404, "Kontakten du begärde finns inte eller har just blivit borttagen");
             }
 
             return View(contact);
@@ -85,27 +85,27 @@ namespace Labb_8.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit_POST(Guid id)
         {
-            var contactToUpdate = _repository.GetContact(id);
+            var contactToUpdate = _repository.GetContactById(id);
             if(contactToUpdate == null)
             {
-                return HttpNotFound();
+                throw new HttpException(404, "Du begärde ett oglitigt GUID");
             }
 
-            if(TryUpdateModel(contactToUpdate, string.Empty, new string[] { "Email", "FirstName", "LastNAme" } ))
+            if(TryUpdateModel(contactToUpdate, string.Empty, new string[] { "Email", "FirstName", "LastName" } ))
             {
 
                 try
                 {
-                    _repository.UpdateContact(contactToUpdate);
+                    _repository.Update(contactToUpdate);
                     _repository.Save();
 
-                    TempData["success"] = string.Format("Uppdaterade {0}", contactToUpdate.Name);
+                    TempData["success"] = string.Format("Uppdaterade {0} {1}", contactToUpdate.FirstName, contactToUpdate.LastName);
                     return RedirectToAction("Index");
                 }
                 catch (Exception)
                 {
                     //Snart....
-                    TempData["error"] = string.Format("Misslyckades att uppdatera {0}", contactToUpdate.Name);
+                    TempData["error"] = string.Format("Misslyckades att uppdatera {0}", contactToUpdate.FirstName, contactToUpdate.LastName);
                 }
 
             }
@@ -119,13 +119,13 @@ namespace Labb_8.Controllers
         {
             if (!id.HasValue)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                throw new HttpException(404, "Du begärde ett oglitigt GUID");
             }
 
-            var contact = _repository.GetContact(id.Value);
+            var contact = _repository.GetContactById(id.Value);
             if (contact == null)
             {
-                return HttpNotFound();
+                throw new HttpException(404, "Kontakten du begärde finns inte eller har just blivit borttagen");
             }
 
             return View(contact);
@@ -137,21 +137,40 @@ namespace Labb_8.Controllers
         {
             try
             {
-                var contact = new Contact { Contactid = id };
-                _repository.DeleteContact(contact);
+                var contact = new Contact { ContactId = id };
+                _repository.Delete(contact);
                 _repository.Save();
 
-                TempData["success"] = "Produkt borttagen";
+                TempData["success"] = "Kontakt borttagen";
                
             }
             catch (Exception)
             {
-                TempData["error"] = "Misslyckades att ta bort produkten";
+                TempData["error"] = "Misslyckades att ta bort Kontakten";
                 RedirectToAction("Delete", new { id = id });
             }
 
             return RedirectToAction("Index");
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Search(string search)
+        {
+            if (!string.IsNullOrEmpty(search))
+            {
+                var contacts = _repository.GetAllContacts()
+                    .Where(x => x.LastName == search)
+                    .ToList();
+
+
+                ViewBag.VisaKnapp = true;
+                return View("Index", contacts);
+              
+            }
+            return View("Index");
+        }
+        
 
 	}
 }

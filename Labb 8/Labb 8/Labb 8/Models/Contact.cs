@@ -23,12 +23,17 @@ namespace Labb_8.Models
 
         [Required(ErrorMessage = "Email måste anges")]
         [DisplayName("Email")]
-      //  [DisplayFormat()]
+        [EmailAddress(ErrorMessage = "Inte en godkänd mailadress")]
         public string Email { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:d}")]
+        public DateTime Datum { get; set; }
+       
 
         public Contact()
         {
             ContactId = Guid.NewGuid();
+            Datum = DateTime.Now;
         }
     }
 
