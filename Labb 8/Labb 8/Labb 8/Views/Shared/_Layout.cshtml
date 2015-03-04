@@ -12,20 +12,20 @@
     <link href="~/Content/MyStyleSheet.css" rel="stylesheet" />
 
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
-    <script src="~/Scripts/bootstrap.min.js"></script>   
+    <script src="~/Scripts/bootstrap.min.js"></script>
     <script src="~/Scripts/toastr.min.js"></script>
-    
+
 </head>
 <body>
-   @RenderSection("Header", required: false)
-   
+    @RenderSection("Header", required: false)
+
     @Html.Partial("_Message")
 
     <div>
         @RenderBody()
-        </div>
-      
+    </div>
 
-    
+
+
 </body>
 </html>

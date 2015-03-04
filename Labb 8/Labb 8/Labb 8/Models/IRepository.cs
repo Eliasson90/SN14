@@ -7,7 +7,7 @@ namespace Labb_8.Models
         void Add(Contact contact);
         void Delete(Contact contact);
         List<Contact> GetAllContacts();
-        Contact GetContactById(Guid id);      
+        Contact GetContactById(Guid id);
         void Update(Contact contact);
         void Save();
     }

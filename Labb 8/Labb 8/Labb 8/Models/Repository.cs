@@ -9,12 +9,12 @@ namespace Labb_8.Models
 {
     public class Repository : Labb_8.Models.IRepository
     {
-    private static readonly string PhysicalPath;
+        private static readonly string PhysicalPath;
         private XDocument _document;
 
         private XDocument Document
         {
-           
+
             get
             {
                 // Lazy load
@@ -30,7 +30,7 @@ namespace Labb_8.Models
 
         public List<Contact> GetAllContacts()
         {
-          
+
             var contact = Document.Descendants("Contact")
                 .Select(element => new Contact
                 {
@@ -39,7 +39,7 @@ namespace Labb_8.Models
                     LastName = element.Element("LastName").Value,
                     Email = element.Element("Email").Value,
                     Datum = DateTime.Parse(element.Element("Datum").Value),
-                    
+
                 })
                 .OrderByDescending(x => x.Datum)
                 .ToList();
@@ -58,7 +58,7 @@ namespace Labb_8.Models
                      LastName = element.Element("LastName").Value,
                      Email = element.Element("Email").Value,
                      Datum = DateTime.Parse(element.Element("Datum").Value),
-                    
+
                  })
                  .FirstOrDefault();
 
@@ -67,37 +67,37 @@ namespace Labb_8.Models
 
         public void Add(Contact contact)
         {
-          
+
             var element = new XElement("Contact",
                 new XElement("Id", contact.ContactId.ToString()),
                 new XElement("FirstName", contact.FirstName),
                 new XElement("LastName", contact.LastName),
                 new XElement("Email", contact.Email),
-                new XElement("Datum", contact.Datum.ToShortDateString())               
+                new XElement("Datum", contact.Datum.ToShortDateString())
                 );
 
 
             Document.Root.Add(element);
-            
+
         }
 
         public void Update(Contact contact)
         {
-           if(contact == null)
-           {
-               throw new ArgumentNullException("contact");
-           }
+            if (contact == null)
+            {
+                throw new ArgumentNullException("contact");
+            }
 
-           var element = Document.Descendants("Contact")
-               .Where(el => Guid.Parse(el.Element("Id").Value) == contact.ContactId)               
-                .FirstOrDefault();
+            var element = Document.Descendants("Contact")
+                .Where(el => Guid.Parse(el.Element("Id").Value) == contact.ContactId)
+                 .FirstOrDefault();
 
-            if(element != null)
+            if (element != null)
             {
                 element.Element("FirstName").Value = contact.FirstName;
                 element.Element("LastName").Value = contact.LastName;
                 element.Element("Email").Value = contact.Email;
-                
+
             }
         }
 
@@ -107,7 +107,7 @@ namespace Labb_8.Models
                 .Where(element => Guid.Parse(element.Element("Id").Value) == contact.ContactId)
                 .FirstOrDefault();
 
-            if(elementToDelete != null)
+            if (elementToDelete != null)
             {
                 elementToDelete.Remove();
             }

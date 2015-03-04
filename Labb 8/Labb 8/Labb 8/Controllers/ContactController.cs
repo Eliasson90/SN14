@@ -12,7 +12,7 @@ namespace Labb_8.Controllers
 {
     public class ContactController : Controller
     {
-     private IRepository _repository;
+        private IRepository _repository;
 
         public ContactController()
             : this(new Repository())
@@ -25,11 +25,11 @@ namespace Labb_8.Controllers
             _repository = repository;
         }
 
-        
+
         // GET: /Products/
         public ActionResult Index()
         {
-            var contact = _repository.GetAllContacts();         
+            var contact = _repository.GetAllContacts();
             return View(contact);
         }
 
@@ -41,25 +41,25 @@ namespace Labb_8.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include ="Email, FirstName, LastName")]Contact contact)
+        public ActionResult Create([Bind(Include = "Email, FirstName, LastName")]Contact contact)
         {
-            try 
-	{	        
-		if(ModelState.IsValid)
+            try
             {
-                _repository.Add(contact);
-                _repository.Save();
+                if (ModelState.IsValid)
+                {
+                    _repository.Add(contact);
+                    _repository.Save();
 
-                TempData["success"] = "Kontkten sparad!";
+                    TempData["success"] = "Kontkten sparad!";
 
-                return RedirectToAction("Index");
+                    return RedirectToAction("Index");
+                }
             }
-	}
-	catch (Exception)
-	{
-		
-		TempData["error"] = "Misslyckades med att spara, försök igen!";
-	}
+            catch (Exception)
+            {
+
+                TempData["error"] = "Misslyckades med att spara, försök igen!";
+            }
 
             return View(contact);
         }
@@ -67,15 +67,15 @@ namespace Labb_8.Controllers
         [HttpGet]
         public ActionResult Edit(Guid? id)
         {
-            if(!id.HasValue)
+            if (!id.HasValue)
             {
-                throw new HttpException(404, "Du begärde ett oglitigt GUID");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Bad Request");
             }
 
             var contact = _repository.GetContactById(id.Value);
-            if(contact == null)
+            if (contact == null)
             {
-                throw new HttpException(404, "Kontakten du begärde finns inte eller har just blivit borttagen");
+                return HttpNotFound();
             }
 
             return View(contact);
@@ -86,12 +86,12 @@ namespace Labb_8.Controllers
         public ActionResult Edit_POST(Guid id)
         {
             var contactToUpdate = _repository.GetContactById(id);
-            if(contactToUpdate == null)
+            if (contactToUpdate == null)
             {
-                throw new HttpException(404, "Du begärde ett oglitigt GUID");
+                return HttpNotFound();
             }
 
-            if(TryUpdateModel(contactToUpdate, string.Empty, new string[] { "Email", "FirstName", "LastName" } ))
+            if (TryUpdateModel(contactToUpdate, string.Empty, new string[] { "Email", "FirstName", "LastName" }))
             {
 
                 try
@@ -110,7 +110,7 @@ namespace Labb_8.Controllers
 
             }
             return View(contactToUpdate);
-          
+
         }
 
 
@@ -119,13 +119,13 @@ namespace Labb_8.Controllers
         {
             if (!id.HasValue)
             {
-                throw new HttpException(404, "Du begärde ett oglitigt GUID");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Bad Request");
             }
 
             var contact = _repository.GetContactById(id.Value);
             if (contact == null)
             {
-                throw new HttpException(404, "Kontakten du begärde finns inte eller har just blivit borttagen");
+                return HttpNotFound();
             }
 
             return View(contact);
@@ -142,7 +142,7 @@ namespace Labb_8.Controllers
                 _repository.Save();
 
                 TempData["success"] = "Kontakt borttagen";
-               
+
             }
             catch (Exception)
             {
@@ -166,11 +166,11 @@ namespace Labb_8.Controllers
 
                 ViewBag.VisaKnapp = true;
                 return View("Index", contacts);
-              
+
             }
             return View("Index");
         }
-        
 
-	}
+
+    }
 }

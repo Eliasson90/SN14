@@ -9,7 +9,7 @@ namespace Labb_8.Models
 {
     public class Contact
     {
-     public Guid ContactId { get; set; }
+        public Guid ContactId { get; set; }
 
         [Required(ErrorMessage = "Förnamn måste anges")]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "Namnet måste vara 3-50 tkn")]
@@ -28,7 +28,7 @@ namespace Labb_8.Models
 
         [DisplayFormat(DataFormatString = "{0:d}")]
         public DateTime Datum { get; set; }
-       
+
 
         public Contact()
         {
