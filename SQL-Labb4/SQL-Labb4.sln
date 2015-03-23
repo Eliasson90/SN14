@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQL_Labb4", "SQL-Labb4\SQL_Labb4.csproj", "{442C7F5B-976A-49E3-BD17-5981C0D80525}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bibliotek", "Bibliotek\Bibliotek.csproj", "{22526421-C4EF-450F-B360-65D221046964}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{442C7F5B-976A-49E3-BD17-5981C0D80525}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{442C7F5B-976A-49E3-BD17-5981C0D80525}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{442C7F5B-976A-49E3-BD17-5981C0D80525}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{442C7F5B-976A-49E3-BD17-5981C0D80525}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22526421-C4EF-450F-B360-65D221046964}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22526421-C4EF-450F-B360-65D221046964}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22526421-C4EF-450F-B360-65D221046964}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22526421-C4EF-450F-B360-65D221046964}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="f3eb0085913b4b979b932bbd3232ecb2" Name="Diagram1">
+        <EntityTypeShape EntityType="BibliotekDbModel.Bok" Width="1.5" PointX="2.625" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="BibliotekDbModel.Forfattare" Width="1.5" PointX="0.5" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="BibliotekDbModel.Kopia" Width="1.5" PointX="4.5" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="BibliotekDbModel.Kund" Width="1.5" PointX="8.5" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="BibliotekDbModel.Lan" Width="1.5" PointX="6.5" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="BibliotekDbModel.vAntalKopiorTillgangligaUtlaning" Width="1.5" PointX="0.75" PointY="4.75" IsExpanded="true" FillColor="Yellow" />
+        <EntityTypeShape EntityType="BibliotekDbModel.vUtlanadAvKundOchVaraTillbaka" Width="1.5" PointX="0.75" PointY="7.75" IsExpanded="true" FillColor="Yellow" />
+        <AssociationConnector Association="BibliotekDbModel.FK_Bok_Forfattare_ForfattarId" ManuallyRouted="false" />
+        <AssociationConnector Association="BibliotekDbModel.FK_Kopia_Bok_BokId" ManuallyRouted="false" />
+        <AssociationConnector Association="BibliotekDbModel.FK_Lan_Kopia_KopiaId" ManuallyRouted="false" />
+        <AssociationConnector Association="BibliotekDbModel.FK_Lan_Kund_KundId" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

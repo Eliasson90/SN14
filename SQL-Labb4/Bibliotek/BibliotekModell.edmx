@@ -1,0 +1,457 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="BibliotekDbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Bok">
+          <Key>
+            <PropertyRef Name="BokId" />
+          </Key>
+          <Property Name="BokId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ForfattarId" Type="int" Nullable="false" />
+          <Property Name="Titel" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="PubliceringsAr" Type="date" Nullable="false" />
+          <Property Name="Genre" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Sprak" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ISBN" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Forfattare">
+          <Key>
+            <PropertyRef Name="ForfattarId" />
+          </Key>
+          <Property Name="ForfattarId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ForNamn" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="EfterNamn" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="FödelseAr" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="DodsAr" Type="date" />
+          <Property Name="Sprak" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Land" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Kopia">
+          <Key>
+            <PropertyRef Name="KopiaId" />
+          </Key>
+          <Property Name="KopiaId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BokId" Type="int" Nullable="false" />
+          <Property Name="InkopsPris" Type="smallmoney" Nullable="false" />
+          <Property Name="InkopsAr" Type="date" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Kund">
+          <Key>
+            <PropertyRef Name="KundId" />
+          </Key>
+          <Property Name="KundId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TelefonNr" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="FadelseAr" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ForNamn" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="EfterNamn" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Address" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="50" />
+          <Property Name="Kon" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Lan">
+          <Key>
+            <PropertyRef Name="LanId" />
+          </Key>
+          <Property Name="LanId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="kundId" Type="int" />
+          <Property Name="KopiaId" Type="int" />
+          <Property Name="LaneDatum" Type="date" Nullable="false" />
+          <Property Name="LamnasTillbaka" Type="date" Nullable="false" />
+          <Property Name="SparradKund" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'BibliotekDb.dbo.vAntalKopiorTillgangligaUtlaning' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vAntalKopiorTillgangligaUtlaning">
+          <Key>
+            <PropertyRef Name="Titel" />
+          </Key>
+          <Property Name="Titel" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="AntalTillgangliga" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'BibliotekDb.dbo.vUtlanadAvKundOchVaraTillbaka' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vUtlanadAvKundOchVaraTillbaka">
+          <Key>
+            <PropertyRef Name="BokTitel" />
+            <PropertyRef Name="Kund" />
+            <PropertyRef Name="LamnasTillbaka" />
+          </Key>
+          <Property Name="BokTitel" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Kund" Type="varchar" MaxLength="101" Nullable="false" />
+          <Property Name="LamnasTillbaka" Type="date" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Bok_Forfattare_ForfattarId">
+          <End Role="Forfattare" Type="Self.Forfattare" Multiplicity="1" />
+          <End Role="Bok" Type="Self.Bok" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Forfattare">
+              <PropertyRef Name="ForfattarId" />
+            </Principal>
+            <Dependent Role="Bok">
+              <PropertyRef Name="ForfattarId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Kopia_Bok_BokId">
+          <End Role="Bok" Type="Self.Bok" Multiplicity="1" />
+          <End Role="Kopia" Type="Self.Kopia" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Bok">
+              <PropertyRef Name="BokId" />
+            </Principal>
+            <Dependent Role="Kopia">
+              <PropertyRef Name="BokId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Lan_Kopia_KopiaId">
+          <End Role="Kopia" Type="Self.Kopia" Multiplicity="0..1" />
+          <End Role="Lan" Type="Self.Lan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kopia">
+              <PropertyRef Name="KopiaId" />
+            </Principal>
+            <Dependent Role="Lan">
+              <PropertyRef Name="KopiaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Lan_Kund_KundId">
+          <End Role="Kund" Type="Self.Kund" Multiplicity="0..1" />
+          <End Role="Lan" Type="Self.Lan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kund">
+              <PropertyRef Name="KundId" />
+            </Principal>
+            <Dependent Role="Lan">
+              <PropertyRef Name="kundId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="Tillbakalamning" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="KopiaId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Utlaning" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="KundId" Type="int" Mode="In" />
+          <Parameter Name="KopiaId" Type="int" Mode="In" />
+        </Function>
+        <EntityContainer Name="BibliotekDbModelStoreContainer">
+          <EntitySet Name="Bok" EntityType="Self.Bok" Schema="Bibliotek" store:Type="Tables" />
+          <EntitySet Name="Forfattare" EntityType="Self.Forfattare" Schema="Bibliotek" store:Type="Tables" />
+          <EntitySet Name="Kopia" EntityType="Self.Kopia" Schema="Bibliotek" store:Type="Tables" />
+          <EntitySet Name="Kund" EntityType="Self.Kund" Schema="Bibliotek" store:Type="Tables" />
+          <EntitySet Name="Lan" EntityType="Self.Lan" Schema="Bibliotek" store:Type="Tables" />
+          <EntitySet Name="vAntalKopiorTillgangligaUtlaning" EntityType="Self.vAntalKopiorTillgangligaUtlaning" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vAntalKopiorTillgangligaUtlaning].[Titel] AS [Titel], 
+    [vAntalKopiorTillgangligaUtlaning].[AntalTillgangliga] AS [AntalTillgangliga]
+    FROM [dbo].[vAntalKopiorTillgangligaUtlaning] AS [vAntalKopiorTillgangligaUtlaning]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vUtlanadAvKundOchVaraTillbaka" EntityType="Self.vUtlanadAvKundOchVaraTillbaka" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vUtlanadAvKundOchVaraTillbaka].[BokTitel] AS [BokTitel], 
+    [vUtlanadAvKundOchVaraTillbaka].[Kund] AS [Kund], 
+    [vUtlanadAvKundOchVaraTillbaka].[LamnasTillbaka] AS [LamnasTillbaka]
+    FROM [dbo].[vUtlanadAvKundOchVaraTillbaka] AS [vUtlanadAvKundOchVaraTillbaka]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Bok_Forfattare_ForfattarId" Association="Self.FK_Bok_Forfattare_ForfattarId">
+            <End Role="Forfattare" EntitySet="Forfattare" />
+            <End Role="Bok" EntitySet="Bok" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Kopia_Bok_BokId" Association="Self.FK_Kopia_Bok_BokId">
+            <End Role="Bok" EntitySet="Bok" />
+            <End Role="Kopia" EntitySet="Kopia" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Lan_Kopia_KopiaId" Association="Self.FK_Lan_Kopia_KopiaId">
+            <End Role="Kopia" EntitySet="Kopia" />
+            <End Role="Lan" EntitySet="Lan" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Lan_Kund_KundId" Association="Self.FK_Lan_Kund_KundId">
+            <End Role="Kund" EntitySet="Kund" />
+            <End Role="Lan" EntitySet="Lan" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BibliotekDbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Bok">
+          <Key>
+            <PropertyRef Name="BokId" />
+          </Key>
+          <Property Name="BokId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ForfattarId" Type="Int32" Nullable="false" />
+          <Property Name="Titel" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PubliceringsAr" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Genre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Sprak" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ISBN" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Forfattare" Relationship="Self.FK_Bok_Forfattare_ForfattarId" FromRole="Bok" ToRole="Forfattare" />
+          <NavigationProperty Name="Kopias" Relationship="Self.FK_Kopia_Bok_BokId" FromRole="Bok" ToRole="Kopia" />
+        </EntityType>
+        <EntityType Name="Forfattare">
+          <Key>
+            <PropertyRef Name="ForfattarId" />
+          </Key>
+          <Property Name="ForfattarId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ForNamn" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="EfterNamn" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FödelseAr" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DodsAr" Type="DateTime" Precision="0" />
+          <Property Name="Sprak" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Land" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Boks" Relationship="Self.FK_Bok_Forfattare_ForfattarId" FromRole="Forfattare" ToRole="Bok" />
+        </EntityType>
+        <EntityType Name="Kopia">
+          <Key>
+            <PropertyRef Name="KopiaId" />
+          </Key>
+          <Property Name="KopiaId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BokId" Type="Int32" Nullable="false" />
+          <Property Name="InkopsPris" Type="Decimal" Precision="10" Scale="4" Nullable="false" />
+          <Property Name="InkopsAr" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Bok" Relationship="Self.FK_Kopia_Bok_BokId" FromRole="Kopia" ToRole="Bok" />
+          <NavigationProperty Name="Lans" Relationship="Self.FK_Lan_Kopia_KopiaId" FromRole="Kopia" ToRole="Lan" />
+        </EntityType>
+        <EntityType Name="Kund">
+          <Key>
+            <PropertyRef Name="KundId" />
+          </Key>
+          <Property Name="KundId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TelefonNr" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FadelseAr" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ForNamn" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="EfterNamn" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Kon" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Lans" Relationship="Self.FK_Lan_Kund_KundId" FromRole="Kund" ToRole="Lan" />
+        </EntityType>
+        <EntityType Name="Lan">
+          <Key>
+            <PropertyRef Name="LanId" />
+          </Key>
+          <Property Name="LanId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="kundId" Type="Int32" />
+          <Property Name="KopiaId" Type="Int32" />
+          <Property Name="LaneDatum" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="LamnasTillbaka" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="SparradKund" Type="Int32" />
+          <NavigationProperty Name="Kopia" Relationship="Self.FK_Lan_Kopia_KopiaId" FromRole="Lan" ToRole="Kopia" />
+          <NavigationProperty Name="Kund" Relationship="Self.FK_Lan_Kund_KundId" FromRole="Lan" ToRole="Kund" />
+        </EntityType>
+        <EntityType Name="vAntalKopiorTillgangligaUtlaning">
+          <Key>
+            <PropertyRef Name="Titel" />
+          </Key>
+          <Property Name="Titel" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="AntalTillgangliga" Type="Int32" />
+        </EntityType>
+        <EntityType Name="vUtlanadAvKundOchVaraTillbaka">
+          <Key>
+            <PropertyRef Name="BokTitel" />
+            <PropertyRef Name="Kund" />
+            <PropertyRef Name="LamnasTillbaka" />
+          </Key>
+          <Property Name="BokTitel" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Kund" Type="String" MaxLength="101" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LamnasTillbaka" Type="DateTime" Nullable="false" Precision="0" />
+        </EntityType>
+        <Association Name="FK_Bok_Forfattare_ForfattarId">
+          <End Role="Forfattare" Type="Self.Forfattare" Multiplicity="1" />
+          <End Role="Bok" Type="Self.Bok" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Forfattare">
+              <PropertyRef Name="ForfattarId" />
+            </Principal>
+            <Dependent Role="Bok">
+              <PropertyRef Name="ForfattarId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Kopia_Bok_BokId">
+          <End Role="Bok" Type="Self.Bok" Multiplicity="1" />
+          <End Role="Kopia" Type="Self.Kopia" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Bok">
+              <PropertyRef Name="BokId" />
+            </Principal>
+            <Dependent Role="Kopia">
+              <PropertyRef Name="BokId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Lan_Kopia_KopiaId">
+          <End Role="Kopia" Type="Self.Kopia" Multiplicity="0..1" />
+          <End Role="Lan" Type="Self.Lan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kopia">
+              <PropertyRef Name="KopiaId" />
+            </Principal>
+            <Dependent Role="Lan">
+              <PropertyRef Name="KopiaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Lan_Kund_KundId">
+          <End Role="Kund" Type="Self.Kund" Multiplicity="0..1" />
+          <End Role="Lan" Type="Self.Lan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kund">
+              <PropertyRef Name="KundId" />
+            </Principal>
+            <Dependent Role="Lan">
+              <PropertyRef Name="kundId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Boks" EntityType="Self.Bok" />
+          <EntitySet Name="Forfattares" EntityType="Self.Forfattare" />
+          <EntitySet Name="Kopias" EntityType="Self.Kopia" />
+          <EntitySet Name="Kunds" EntityType="Self.Kund" />
+          <EntitySet Name="Lans" EntityType="Self.Lan" />
+          <EntitySet Name="vAntalKopiorTillgangligaUtlanings" EntityType="Self.vAntalKopiorTillgangligaUtlaning" />
+          <EntitySet Name="vUtlanadAvKundOchVaraTillbakas" EntityType="Self.vUtlanadAvKundOchVaraTillbaka" />
+          <AssociationSet Name="FK_Bok_Forfattare_ForfattarId" Association="Self.FK_Bok_Forfattare_ForfattarId">
+            <End Role="Forfattare" EntitySet="Forfattares" />
+            <End Role="Bok" EntitySet="Boks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Kopia_Bok_BokId" Association="Self.FK_Kopia_Bok_BokId">
+            <End Role="Bok" EntitySet="Boks" />
+            <End Role="Kopia" EntitySet="Kopias" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Lan_Kopia_KopiaId" Association="Self.FK_Lan_Kopia_KopiaId">
+            <End Role="Kopia" EntitySet="Kopias" />
+            <End Role="Lan" EntitySet="Lans" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Lan_Kund_KundId" Association="Self.FK_Lan_Kund_KundId">
+            <End Role="Kund" EntitySet="Kunds" />
+            <End Role="Lan" EntitySet="Lans" />
+          </AssociationSet>
+          <FunctionImport Name="Tillbakalamning">
+            <Parameter Name="KopiaId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Utlaning">
+            <Parameter Name="KundId" Mode="In" Type="Int32" />
+            <Parameter Name="KopiaId" Mode="In" Type="Int32" />
+          </FunctionImport>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BibliotekDbModelStoreContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="Boks">
+            <EntityTypeMapping TypeName="BibliotekDbModel.Bok">
+              <MappingFragment StoreEntitySet="Bok">
+                <ScalarProperty Name="BokId" ColumnName="BokId" />
+                <ScalarProperty Name="ForfattarId" ColumnName="ForfattarId" />
+                <ScalarProperty Name="Titel" ColumnName="Titel" />
+                <ScalarProperty Name="PubliceringsAr" ColumnName="PubliceringsAr" />
+                <ScalarProperty Name="Genre" ColumnName="Genre" />
+                <ScalarProperty Name="Sprak" ColumnName="Sprak" />
+                <ScalarProperty Name="ISBN" ColumnName="ISBN" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Forfattares">
+            <EntityTypeMapping TypeName="BibliotekDbModel.Forfattare">
+              <MappingFragment StoreEntitySet="Forfattare">
+                <ScalarProperty Name="ForfattarId" ColumnName="ForfattarId" />
+                <ScalarProperty Name="ForNamn" ColumnName="ForNamn" />
+                <ScalarProperty Name="EfterNamn" ColumnName="EfterNamn" />
+                <ScalarProperty Name="FödelseAr" ColumnName="FödelseAr" />
+                <ScalarProperty Name="DodsAr" ColumnName="DodsAr" />
+                <ScalarProperty Name="Sprak" ColumnName="Sprak" />
+                <ScalarProperty Name="Land" ColumnName="Land" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Kopias">
+            <EntityTypeMapping TypeName="BibliotekDbModel.Kopia">
+              <MappingFragment StoreEntitySet="Kopia">
+                <ScalarProperty Name="KopiaId" ColumnName="KopiaId" />
+                <ScalarProperty Name="BokId" ColumnName="BokId" />
+                <ScalarProperty Name="InkopsPris" ColumnName="InkopsPris" />
+                <ScalarProperty Name="InkopsAr" ColumnName="InkopsAr" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Kunds">
+            <EntityTypeMapping TypeName="BibliotekDbModel.Kund">
+              <MappingFragment StoreEntitySet="Kund">
+                <ScalarProperty Name="KundId" ColumnName="KundId" />
+                <ScalarProperty Name="TelefonNr" ColumnName="TelefonNr" />
+                <ScalarProperty Name="FadelseAr" ColumnName="FadelseAr" />
+                <ScalarProperty Name="ForNamn" ColumnName="ForNamn" />
+                <ScalarProperty Name="EfterNamn" ColumnName="EfterNamn" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Kon" ColumnName="Kon" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Lans">
+            <EntityTypeMapping TypeName="BibliotekDbModel.Lan">
+              <MappingFragment StoreEntitySet="Lan">
+                <ScalarProperty Name="LanId" ColumnName="LanId" />
+                <ScalarProperty Name="kundId" ColumnName="kundId" />
+                <ScalarProperty Name="KopiaId" ColumnName="KopiaId" />
+                <ScalarProperty Name="LaneDatum" ColumnName="LaneDatum" />
+                <ScalarProperty Name="LamnasTillbaka" ColumnName="LamnasTillbaka" />
+                <ScalarProperty Name="SparradKund" ColumnName="SparradKund" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vAntalKopiorTillgangligaUtlanings">
+            <EntityTypeMapping TypeName="BibliotekDbModel.vAntalKopiorTillgangligaUtlaning">
+              <MappingFragment StoreEntitySet="vAntalKopiorTillgangligaUtlaning">
+                <ScalarProperty Name="Titel" ColumnName="Titel" />
+                <ScalarProperty Name="AntalTillgangliga" ColumnName="AntalTillgangliga" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vUtlanadAvKundOchVaraTillbakas">
+            <EntityTypeMapping TypeName="BibliotekDbModel.vUtlanadAvKundOchVaraTillbaka">
+              <MappingFragment StoreEntitySet="vUtlanadAvKundOchVaraTillbaka">
+                <ScalarProperty Name="BokTitel" ColumnName="BokTitel" />
+                <ScalarProperty Name="Kund" ColumnName="Kund" />
+                <ScalarProperty Name="LamnasTillbaka" ColumnName="LamnasTillbaka" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="Tillbakalamning" FunctionName="BibliotekDbModel.Store.Tillbakalamning" />
+          <FunctionImportMapping FunctionImportName="Utlaning" FunctionName="BibliotekDbModel.Store.Utlaning" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
