@@ -7,7 +7,15 @@ SELECT LastName FROM Person.Person
 BEGIN TRANSACTION
 
 UPDATE Person.Person
-SET LastName = 'Hult'ROLLBACK TRANSACTIONSELECT @@TRANCOUNT AS ActiveTransactions--Uppgift 4.2--CREATE TABLE [dbo].[TempCustomers]
+SET LastName = 'Hult'
+
+
+ROLLBACK TRANSACTION
+
+SELECT @@TRANCOUNT AS ActiveTransactions
+
+--Uppgift 4.2--
+CREATE TABLE [dbo].[TempCustomers]
 (
 [ContactID] [int] NULL,
 [FirstName] [nvarchar](50) NULL,
@@ -20,7 +28,7 @@ GO
 
 INSERT INTO dbo.TempCustomers VALUES (1,'Kalen', 'Delaney')
 ,	(2, 'Herrman', 'Karlsson', 'Vislanda', 'Kronoberg')
-,	
+
 
 INSERT INTO dbo.TempCustomers VALUES (3, 'Tora', 'Eriksson', 'Guldsmedshyttan')
 ,	(4, 'Charlie', 'Charpenter', 'Tappström')
@@ -56,7 +64,12 @@ ON BE.BusinessEntityID = BEA.BusinessEntityID
 	JOIN Person.Address PA
 ON BEA.AddressID=PA.AddressID
 	JOIN Person.StateProvince AS SP
-ON PA.StateProvinceID = SP.StateProvinceID)--Uppgift 4.5---- Töm tabellen
+ON PA.StateProvinceID = SP.StateProvinceID
+)
+
+
+--Uppgift 4.5--
+-- Töm tabellen
 -- och töm buffer och cache
 TRUNCATE TABLE dbo.TempCustomers
 GO
@@ -88,34 +101,64 @@ ON [dbo].[TempCustomers]
 GO
 CREATE NONCLUSTERED INDEX [NonClustered_FName]
 ON [dbo].[TempCustomers]
-( [FirstName] ASC )
+( [FirstName] ASC )
+
 --1705ms
 --491ms , 496ms, 510 ms,511 ms
 --Det tar längre tid med Index.
 
 --Uppgift 4.6--
-SELECT BusinessEntityID
-,	PersonType
-,	FirstName
-,	LastName
-,	Title
-,	EmailPromotion
- INTO #TempTab 
- FROM Person.Person 
- WHERE LastName IN('Achong' , 'Acevedo')
+SELECT BusinessEntityID, PersonType, FirstName, LastName, Title, EmailPromotion
+INTO #TempTab
+FROM Person.Person
+WHERE LastName IN ('Achong', 'Acevedo');
 
+SELECT * FROM #TempTab;
 
- SELECT * FROM #TempTab 
+UPDATE dbo.#TempTab
+SET BusinessEntityID = (
+SELECT MAX(P.BusinessEntityID) + 1
+FROM Person.Person AS P
+);
 
- INSERT INTO Person.Person (BusinessEntityID,PersonType,FirstName,LastName,Title,EmailPromotion)
- 
- SELECT MAX(BusinessEntityID + 1)
-,	PersonType
-,	FirstName
-,	LastName
-,	Title
-,	EmailPromotion
-FROM #TempTab
-GROUP BY PersonType, FirstName,	LastName,Title,	EmailPromotion
+UPDATE TOP (1) dbo.#TempTab
+SET BusinessEntityID = BusinessEntityID + 1;
 
+INSERT INTO Person.Person (BusinessEntityID, PersonType, FirstName, LastName, Title, EmailPromotion)
+SELECT BusinessEntityID, PersonType, FirstName, LastName, Title, EmailPromotion
+FROM #TempTab;
 
+INSERT INTO Person.BusinessEntity
+VALUES (DEFAULT, DEFAULT);
+
+DROP TABLE #TempTab;
+
+SELECT P.FirstName, P.BusinessEntityID, ModifiedDate
+FROM Person.Person AS P
+WHERE ModifiedDate > '2015-03-10';
+
+--Uppgift 4.7--
+
+UPDATE Person.Person
+SET FirstName = 'Gurra', LastName = 'Tjong'
+WHERE BusinessEntityID IN 
+(
+	SELECT BusinessEntityID
+	FROM Person.Person
+	WHERE LastName IN ('Achong', 'Acevedo')
+)
+
+--Uppgift 4.8--
+SELECT PP.Name
+	,	PP.ListPrice * 1.1 AS 'ListPrice 10%'
+FROM Production.Product AS PP 
+INNER JOIN Production.ProductSubcategory AS PPS ON PPS.ProductSubcategoryID = PP.ProductSubcategoryID
+WHERE PPS.Name = 'Gloves'
+
+--Uppgift 4.9--
+DELETE FROM dbo.TempCustomers
+WHERE LastName = 'Smith'
+
+SELECT LastName
+FROM dbo.TempCustomers
+WHERE LastName LIKE 'SM%'
