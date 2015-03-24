@@ -1,0 +1,111 @@
+﻿@model SQL_Labb4.Models.KundVyModell
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Edit</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>KundVyModell</h4>
+        <hr />
+        @Html.ValidationSummary(true)
+        @*<div class="form-group">
+            @Html.LabelFor(model => model.KundId, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.KundId)
+                @Html.ValidationMessageFor(model => model.KundId)
+            </div>
+        </div>*@
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ForNamn, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ForNamn)
+                @Html.ValidationMessageFor(model => model.ForNamn)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.EfterNamn, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.EfterNamn)
+                @Html.ValidationMessageFor(model => model.EfterNamn)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TelefonNr, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TelefonNr)
+                @Html.ValidationMessageFor(model => model.TelefonNr)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Email)
+                @Html.ValidationMessageFor(model => model.Email)
+            </div>
+        </div>
+
+        @*<div class="form-group">
+            @Html.LabelFor(model => model.AntalLan, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.AntalLan)
+                @Html.ValidationMessageFor(model => model.AntalLan)
+            </div>
+        </div>*@
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+
+
+<table class="table">
+    <tr>
+        <th>
+            Titel
+        </th>
+        <th>
+            Lånedatum
+        </th>
+        <th>
+            Återdatum
+        </th>
+    </tr>
+    @foreach (var item in Model.Boker)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Titel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LaneDatum)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LamnasTillbaka)
+            </td>
+        </tr>
+    }
+</table>
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>

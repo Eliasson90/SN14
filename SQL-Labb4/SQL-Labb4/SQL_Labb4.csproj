@@ -132,14 +132,20 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\KundBokModell.cs" />
+    <Compile Include="Models\KundVyModell.cs" />
+    <Compile Include="Models\LanaBok.cs" />
+    <Compile Include="Models\TaBortKundModell.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
     <Content Include="packages.config" />
     <Content Include="ClassDiagram1.cd" />
-    <Content Include="Views\Contact\Index.cshtml" />
     <Content Include="Views\Shared\_message.cshtml" />
+    <Content Include="Views\Contact\Index.cshtml" />
+    <Content Include="Views\Contact\Edit.cshtml" />
+    <Content Include="Views\Contact\Delete.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -149,7 +155,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Bibliotek\Bibliotek.csproj">

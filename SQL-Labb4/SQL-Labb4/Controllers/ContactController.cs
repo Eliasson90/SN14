@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Xml.Linq;
 using Bibliotek;
+using SQL_Labb4.Models;
 
 
 namespace SQL_Labb4.Controllers
@@ -17,158 +18,134 @@ namespace SQL_Labb4.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            IList<Kund> kunder;
-           using(var ctx = new Entities())
-           {
-               
-               var kundboklan = (from K in ctx.Kunds
-                             join L in ctx.Lans on K.KundId equals L.LanId
-                             join B in ctx.Boks on K.KundId equals B.BokId
-                             select new {K,L,B })
-                            .ToList();
+            IList<KundVyModell> kunderMedLan;
+            using (var ctx = new BibliotekDbEntities1())
+            {
 
-           }
-           return View(kunder);
+
+                var lanPerKund = from k in ctx.Kunds
+                                 join l in ctx.Lans on k.KundId equals l.kundId
+                                 where l.LamnasTillbaka.HasValue
+                                 group k by k.KundId into grp
+                                 select new { key = grp.Key, Count = grp.Count() };
+
+
+                 kunderMedLan = (from k in ctx.Kunds
+                                    join lk in lanPerKund on k.KundId equals lk.key into lks
+                                    from lk in lks.DefaultIfEmpty()
+                                    select new KundVyModell { KundId = k.KundId, ForNamn = k.ForNamn, EfterNamn = k.EfterNamn, TelefonNr = k.TelefonNr, Email = k.Email, AntalLan = lk == null ? 0 : lk.Count })
+                                   .ToList();
+
+
+            }
+          return View(kunderMedLan);
+      
         }
 
-    //    [HttpGet]
-    //    public ActionResult Create()
-    //    {
-    //        return View();
-    //    }
+        [HttpGet]
+        public ActionResult Edit(int id)
+        {
+            KundVyModell kund;
+            using (var ctx = new BibliotekDbEntities1())
+            {
+                
+                var kundBoker = (from l in ctx.Lans
+                                     join k in ctx.Kopias on l.KopiaId equals k.KopiaId
+                                     join b in ctx.Boks on k.BokId equals b.BokId
+                                     where l.LamnasTillbaka.HasValue && l.kundId == id  // parameter till frågan...
+                                     select new KundBokModell{BokId = b.BokId, Titel= b.Titel, LaneDatum = l.LaneDatum, LamnasTillbaka = l.LamnasTillbaka })
+                                    .ToList();
 
-    //    [HttpPost]
-    //    [ValidateAntiForgeryToken]
-    //    public ActionResult Create([Bind(Include = "Email, FirstName, LastName")]Contact contact)
-    //    {
-    //        try
-    //        {
-    //            if (ModelState.IsValid)
-    //            {
-    //                _repository.Add(contact);
-    //                _repository.Save();
+                 kund = (from k in ctx.Kunds
+                           where k.KundId == id
+                           select new KundVyModell
+                           {
+                               KundId = k.KundId,
+                               ForNamn = k.ForNamn,
+                               EfterNamn = k.EfterNamn,
+                               TelefonNr = k.TelefonNr,
+                               Email = k.Email
 
-    //                TempData["success"] = "Kontkten sparad!";
+                           }).FirstOrDefault();
 
-    //                return RedirectToAction("Index");
-    //            }
-    //        }
-    //        catch (Exception)
-    //        {
-
-    //            TempData["error"] = "Misslyckades med att spara, försök igen!";
-    //        }
-
-    //        return View(contact);
-    //    }
-
-    //    [HttpGet]
-    //    public ActionResult Edit(Guid? id)
-    //    {
-    //        if (!id.HasValue)
-    //        {
-    //            return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Bad Request");
-    //        }
-
-    //        var contact = _repository.GetContactById(id.Value);
-    //        if (contact == null)
-    //        {
-    //            return HttpNotFound();
-    //        }
-
-    //        return View(contact);
-    //    }
-
-    //    [HttpPost, ActionName("Edit")]
-    //    [ValidateAntiForgeryToken]
-    //    public ActionResult Edit_POST(Guid id)
-    //    {
-    //        var contactToUpdate = _repository.GetContactById(id);
-    //        if (contactToUpdate == null)
-    //        {
-    //            return HttpNotFound();
-    //        }
-
-    //        if (TryUpdateModel(contactToUpdate, string.Empty, new string[] { "Email", "FirstName", "LastName" }))
-    //        {
-
-    //            try
-    //            {
-    //                _repository.Update(contactToUpdate);
-    //                _repository.Save();
-
-    //                TempData["success"] = string.Format("Uppdaterade {0} {1}", contactToUpdate.FirstName, contactToUpdate.LastName);
-    //                return RedirectToAction("Index");
-    //            }
-    //            catch (Exception)
-    //            {
-    //                //Snart....
-    //                TempData["error"] = string.Format("Misslyckades att uppdatera {0}", contactToUpdate.FirstName, contactToUpdate.LastName);
-    //            }
-
-    //        }
-    //        return View(contactToUpdate);
-
-    //    }
+                if(kund != null)
+                {
+                    kund.Boker = kundBoker;
+                }
 
 
-    //    [HttpGet]
-    //    public ActionResult Delete(Guid? id)
-    //    {
-    //        if (!id.HasValue)
-    //        {
-    //            return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Bad Request");
-    //        }
+            }
 
-    //        var contact = _repository.GetContactById(id.Value);
-    //        if (contact == null)
-    //        {
-    //            return HttpNotFound();
-    //        }
-
-    //        return View(contact);
-    //    }
-
-    //    [HttpPost, ActionName("Delete")]
-    //    [ValidateAntiForgeryToken]
-    //    public ActionResult DeleteConfirm(Guid id)
-    //    {
-    //        try
-    //        {
-    //            var contact = new Contact { ContactId = id };
-    //            _repository.Delete(contact);
-    //            _repository.Save();
-
-    //            TempData["success"] = "Kontakt borttagen";
-
-    //        }
-    //        catch (Exception)
-    //        {
-    //            TempData["error"] = "Misslyckades att ta bort Kontakten";
-    //            RedirectToAction("Delete", new { id = id });
-    //        }
-
-    //        return RedirectToAction("Index");
-    //    }
-
-    //    [HttpPost]
-    //    [ValidateAntiForgeryToken]
-    //    public ActionResult Search(string search)
-    //    {
-    //        if (!string.IsNullOrEmpty(search))
-    //        {
-    //            var contacts = _repository.GetAllContacts()
-    //                .Where(x => x.LastName == search)
-    //                .ToList();
+            return View(kund);
+        }
 
 
-    //            ViewBag.VisaKnapp = true;
-    //            return View("Index", contacts);
+        [HttpGet]
+        public ActionResult Delete(int id)
+        {
+            TaBortKundModell delete;
+            using (var ctx = new BibliotekDbEntities1())
+            {
 
-    //        }
-    //        return View("Index");
-    //    }
 
+                var harLan = (from l in ctx.Lans
+                              join k in ctx.Kopias on l.KopiaId equals k.KopiaId
+                              where l.kundId == id && k.Status > 1
+                              select l).Any();
+
+                    delete = (from k in ctx.Kunds
+                              where k.KundId == id
+                              select new TaBortKundModell
+                              {
+                                  KundId = k.KundId,
+                                  ForNamn = k.ForNamn,
+                                  EfterNamn = k.EfterNamn,
+                                  HarLan = harLan
+                              }).FirstOrDefault();
+                                                  
+            }
+            return View(delete);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirm(int id)
+        {
+            try
+            {
+               using (var ctx = new BibliotekDbEntities1())
+               {
+                   var harLan = (from l in ctx.Lans
+                                 join k in ctx.Kopias on l.KopiaId equals k.KopiaId
+                                 where l.kundId == id && k.Status > 1
+                                 select l).Any();
+
+                   if(harLan)
+                   {
+                       throw new InvalidOperationException();
+                   }
+                   ctx.DeleteKund(id);
+               }
+
+            }
+            catch (Exception)
+            {
+                TempData["error"] = "Misslyckades att ta bort Kontakten";
+                RedirectToAction("Delete", new { id = id });
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public ActionResult Lana()
+        {
+            using (var ctx = new BibliotekDbEntities1())
+            {
+
+            }
+            return View();
+        }
 
     }
 }

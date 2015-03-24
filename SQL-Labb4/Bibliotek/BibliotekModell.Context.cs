@@ -15,10 +15,10 @@ namespace Bibliotek
     using System.Data.Entity.Core.Objects;
     using System.Linq;
     
-    public partial class Entities : DbContext
+    public partial class BibliotekDbEntities1 : DbContext
     {
-        public Entities()
-            : base("name=Entities")
+        public BibliotekDbEntities1()
+            : base("name=BibliotekDbEntities1")
         {
         }
     
@@ -55,6 +55,15 @@ namespace Bibliotek
                 new ObjectParameter("KopiaId", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Utlaning", kundIdParameter, kopiaIdParameter);
+        }
+    
+        public virtual int DeleteKund(Nullable<int> kundId)
+        {
+            var kundIdParameter = kundId.HasValue ?
+                new ObjectParameter("KundId", kundId) :
+                new ObjectParameter("KundId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("DeleteKund", kundIdParameter);
         }
     }
 }

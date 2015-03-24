@@ -88,10 +88,10 @@ IF NOT EXISTS(SELECT * FROM sys.objects
 CREATE TABLE Bibliotek.Lan
 (
 LanId int NOT NULL IDENTITY(1,1),
-kundId int  NULL,
-KopiaId int  NULL ,
+kundId int  NOT NULL,
+KopiaId int  NOT NULL ,
 LaneDatum date NOT NULL CONSTRAINT DF_LaneDatum DEFAULT GETDATE(),
-LamnasTillbaka date NOT NULL CONSTRAINT DF_LamnasTillbaka DEFAULT DATEADD(WEEK, 2, GETDATE()),
+LamnasTillbaka date  NULL CONSTRAINT DF_LamnasTillbaka DEFAULT DATEADD(WEEK, 2, GETDATE()),
 SparradKund int NULL CONSTRAINT DF_SparradKund DEFAULT 1,
 
 CONSTRAINT PK_Lan_LanId PRIMARY KEY (LanId),
@@ -101,10 +101,10 @@ CONSTRAINT FK_Lan_Kopia_KopiaId
 CONSTRAINT FK_Lan_Kund_KundId
 	FOREIGN KEY (KundId) REFERENCES Bibliotek.Kund(KundId),
 
+	CONSTRAINT uc_EttLanPerKund UNIQUE (KundId,KopiaId,LaneDatum)
 );
 
---ALTER TABLE Bibliotek.Lan
---ADD CONSTRAINT uc_EttLanPerKund UNIQUE (KundId,KopiaId,LaneDatum)
+
 
 DECLARE @ForfattarId INTEGER,
 		@BokId INTEGER,
@@ -150,6 +150,11 @@ VALUES (@BokId,80, GETDATE()),
 		(@BokId,80, GETDATE()),
 		(@BokId,80, GETDATE())
 
+SET @KopiaId = SCOPE_IDENTITY();
+INSERT INTO Bibliotek.Lan (kundId, KopiaId, LaneDatum)
+	VALUES (@KundId,@KopiaId,GETDATE())
+
+
 INSERT INTO Bibliotek.Bok (ForfattarId, Titel, PubliceringsAr, Genre, Sprak,ISBN)
 VALUES (@ForfattarId, 'Harry Potter & Hemligheternas kammare', GETDATE(), 'Aventyr', 'Svenska', '853245698745');
 SET @BokId = SCOPE_IDENTITY();
@@ -159,6 +164,10 @@ VALUES (@BokId,80, GETDATE()),
 		(@BokId,80, GETDATE()),
 		(@BokId,80, GETDATE()),
 		(@BokId,80, GETDATE())
+		SET @KopiaId = SCOPE_IDENTITY();
+INSERT INTO Bibliotek.Lan (kundId, KopiaId, LaneDatum)
+	VALUES (@KundId,@KopiaId,GETDATE())
+
 
 INSERT INTO Bibliotek.Bok (ForfattarId, Titel, PubliceringsAr, Genre, Sprak,ISBN)
 VALUES (@ForfattarId, 'Harry Potter & Fången från Askebar', GETDATE(), 'Aventyr', 'Svenska', '4521365478965');
@@ -169,7 +178,9 @@ VALUES (@BokId,80, GETDATE()),
 		(@BokId,80, GETDATE()),
 		(@BokId,80, GETDATE()),
 		(@BokId,80, GETDATE())
-
+		SET @KopiaId = SCOPE_IDENTITY();
+INSERT INTO Bibliotek.Lan (kundId, KopiaId, LaneDatum)
+	VALUES (@KundId,@KopiaId,GETDATE())
 
 INSERT INTO Bibliotek.Bok (ForfattarId, Titel, PubliceringsAr, Genre, Sprak,ISBN)
 VALUES (@ForfattarId, 'Harry Potter & Phenix Orders', GETDATE(), 'Aventyr', 'Svenska', '6578941236585');
@@ -180,7 +191,9 @@ VALUES (@BokId,80, GETDATE()),
 		(@BokId,80, GETDATE()),
 		(@BokId,80, GETDATE()),
 		(@BokId,80, GETDATE())
-
+		SET @KopiaId = SCOPE_IDENTITY();
+INSERT INTO Bibliotek.Lan (kundId, KopiaId, LaneDatum)
+	VALUES (@KundId,@KopiaId,GETDATE())
 
 INSERT INTO Bibliotek.Bok (ForfattarId, Titel, PubliceringsAr, Genre, Sprak,ISBN)
 VALUES (@ForfattarId, 'Harry Potter & Gyllene Bägaren', GETDATE(), 'Aventyr', 'Svenska', '9654745871258');
@@ -191,22 +204,25 @@ VALUES (@BokId,80, GETDATE()),
 		(@BokId,80, GETDATE()),
 		(@BokId,80, GETDATE()),
 		(@BokId,80, GETDATE())
-
-
-INSERT INTO Bibliotek.Lan (kundId, KopiaId)
-VALUES (@KundId, @KopiaId)
-SET @LanId = SCOPE_IDENTITY();
-
-INSERT INTO Bibliotek.Lan (kundId, KopiaId)
-VALUES (@KundId, @KopiaId)
-SET @LanId = SCOPE_IDENTITY();
-
-
+		SET @KopiaId = SCOPE_IDENTITY();
 INSERT INTO Bibliotek.Lan (kundId, KopiaId, LaneDatum)
-	VALUES (@KundId,@KopiaId,GETDATE()),
-			(@KundId,@KopiaId,GETDATE()),
-			(@KundId,@KopiaId,GETDATE())
---SET @LanId = SCOPE_IDENTITY
+	VALUES (@KundId,@KopiaId,GETDATE())
+
+
+
+		
+
+
+--INSERT INTO Bibliotek.Lan (kundId, KopiaId)
+--VALUES (@KundId, @KopiaId)
+--SET @LanId = SCOPE_IDENTITY();
+
+--INSERT INTO Bibliotek.Lan (kundId, KopiaId)
+--VALUES (@KundId, @KopiaId)
+--SET @LanId = SCOPE_IDENTITY();
+
+
+
 
 SELECT * FROM Bibliotek.Kund
 
@@ -220,7 +236,7 @@ SELECT * FROM Bibliotek.Forfattare
 
 
 
---IF NOT EXISTS (SELECT name FROM sys.objects WHERE name = 'vUtlanadAvKundOchVaraTillbaka')
+
 
 GO
 CREATE VIEW vUtlanadAvKundOchVaraTillbaka AS

@@ -15,8 +15,8 @@ namespace Bibliotek
     public partial class Lan
     {
         public int LanId { get; set; }
-        public Nullable<int> kundId { get; set; }
-        public Nullable<int> KopiaId { get; set; }
+        public int kundId { get; set; }
+        public int KopiaId { get; set; }
         public System.DateTime LaneDatum { get; set; }
         public Nullable<System.DateTime> LamnasTillbaka { get; set; }
         public Nullable<int> SparradKund { get; set; }
