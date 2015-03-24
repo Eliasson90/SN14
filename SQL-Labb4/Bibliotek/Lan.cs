@@ -18,7 +18,7 @@ namespace Bibliotek
         public Nullable<int> kundId { get; set; }
         public Nullable<int> KopiaId { get; set; }
         public System.DateTime LaneDatum { get; set; }
-        public System.DateTime LamnasTillbaka { get; set; }
+        public Nullable<System.DateTime> LamnasTillbaka { get; set; }
         public Nullable<int> SparradKund { get; set; }
     
         public virtual Kopia Kopia { get; set; }

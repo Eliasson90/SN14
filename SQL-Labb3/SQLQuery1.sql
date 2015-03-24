@@ -74,7 +74,7 @@ KopiaId int NOT NULL IDENTITY(1,1),
 BokId int NOT NULL,
 InkopsPris smallmoney NOT NULL,
 InkopsAr date NOT NULL,
-[Status] int NOT NULL,
+[Status] int NOT NULL CONSTRAINT DF_Stauts DEFAULT 1,
 
 CONSTRAINT PK_Kopia_KopiaId PRIMARY KEY (KopiaId),
 
@@ -88,12 +88,11 @@ IF NOT EXISTS(SELECT * FROM sys.objects
 CREATE TABLE Bibliotek.Lan
 (
 LanId int NOT NULL IDENTITY(1,1),
-kundId int NOT NULL,
-KopiaId int NOT NULL ,
+kundId int  NULL,
+KopiaId int  NULL ,
 LaneDatum date NOT NULL CONSTRAINT DF_LaneDatum DEFAULT GETDATE(),
 LamnasTillbaka date NOT NULL CONSTRAINT DF_LamnasTillbaka DEFAULT DATEADD(WEEK, 2, GETDATE()),
 SparradKund int NULL CONSTRAINT DF_SparradKund DEFAULT 1,
-													
 
 CONSTRAINT PK_Lan_LanId PRIMARY KEY (LanId),
 
@@ -103,6 +102,9 @@ CONSTRAINT FK_Lan_Kund_KundId
 	FOREIGN KEY (KundId) REFERENCES Bibliotek.Kund(KundId),
 
 );
+
+--ALTER TABLE Bibliotek.Lan
+--ADD CONSTRAINT uc_EttLanPerKund UNIQUE (KundId,KopiaId,LaneDatum)
 
 DECLARE @ForfattarId INTEGER,
 		@BokId INTEGER,
@@ -139,67 +141,57 @@ SET @ForfattarId = SCOPE_IDENTITY();
 
 INSERT INTO Bibliotek.Bok (ForfattarId, Titel, PubliceringsAr, Genre, Sprak,ISBN)
 VALUES (@ForfattarId, 'Harry Potter & de vises sten', GETDATE(), 'Aventyr', 'Svenska', '1245863254789');
+
 SET @BokId = SCOPE_IDENTITY();
+INSERT INTO Bibliotek.Kopia (BokId, InkopsPris, InkopsAr)
+VALUES (@BokId,80, GETDATE()),
+		(@BokId,80, GETDATE()),
+		(@BokId,80, GETDATE()),
+		(@BokId,80, GETDATE()),
+		(@BokId,80, GETDATE())
 
 INSERT INTO Bibliotek.Bok (ForfattarId, Titel, PubliceringsAr, Genre, Sprak,ISBN)
 VALUES (@ForfattarId, 'Harry Potter & Hemligheternas kammare', GETDATE(), 'Aventyr', 'Svenska', '853245698745');
 SET @BokId = SCOPE_IDENTITY();
+INSERT INTO Bibliotek.Kopia (BokId, InkopsPris, InkopsAr)
+VALUES (@BokId,80, GETDATE()),
+		(@BokId,80, GETDATE()),
+		(@BokId,80, GETDATE()),
+		(@BokId,80, GETDATE()),
+		(@BokId,80, GETDATE())
 
 INSERT INTO Bibliotek.Bok (ForfattarId, Titel, PubliceringsAr, Genre, Sprak,ISBN)
 VALUES (@ForfattarId, 'Harry Potter & Fången från Askebar', GETDATE(), 'Aventyr', 'Svenska', '4521365478965');
 SET @BokId = SCOPE_IDENTITY();
+INSERT INTO Bibliotek.Kopia (BokId, InkopsPris, InkopsAr)
+VALUES (@BokId,80, GETDATE()),
+		(@BokId,80, GETDATE()),
+		(@BokId,80, GETDATE()),
+		(@BokId,80, GETDATE()),
+		(@BokId,80, GETDATE())
+
 
 INSERT INTO Bibliotek.Bok (ForfattarId, Titel, PubliceringsAr, Genre, Sprak,ISBN)
 VALUES (@ForfattarId, 'Harry Potter & Phenix Orders', GETDATE(), 'Aventyr', 'Svenska', '6578941236585');
 SET @BokId = SCOPE_IDENTITY();
+INSERT INTO Bibliotek.Kopia (BokId, InkopsPris, InkopsAr)
+VALUES (@BokId,80, GETDATE()),
+		(@BokId,80, GETDATE()),
+		(@BokId,80, GETDATE()),
+		(@BokId,80, GETDATE()),
+		(@BokId,80, GETDATE())
 
 
 INSERT INTO Bibliotek.Bok (ForfattarId, Titel, PubliceringsAr, Genre, Sprak,ISBN)
 VALUES (@ForfattarId, 'Harry Potter & Gyllene Bägaren', GETDATE(), 'Aventyr', 'Svenska', '9654745871258');
 SET @BokId = SCOPE_IDENTITY();
-
-ALTER TABLE Bibliotek.Kopia
-ADD CONSTRAINT DF_Kopia_Status DEFAULT 1 FOR [Status]
-
 INSERT INTO Bibliotek.Kopia (BokId, InkopsPris, InkopsAr)
 VALUES (@BokId,80, GETDATE()),
 		(@BokId,80, GETDATE()),
 		(@BokId,80, GETDATE()),
 		(@BokId,80, GETDATE()),
 		(@BokId,80, GETDATE())
-SET @KopiaId = SCOPE_IDENTITY();
 
-INSERT INTO Bibliotek.Kopia (BokId, InkopsPris, InkopsAr)
-VALUES (@BokId,80, GETDATE()),
-		(@BokId,80, GETDATE()),
-		(@BokId,80, GETDATE()),
-		(@BokId,80, GETDATE()),
-		(@BokId,80, GETDATE())
-SET @KopiaId = SCOPE_IDENTITY();
-
-INSERT INTO Bibliotek.Kopia (BokId, InkopsPris, InkopsAr)
-VALUES (@BokId,80, GETDATE()),
-		(@BokId,80, GETDATE()),
-		(@BokId,80, GETDATE()),
-		(@BokId,80, GETDATE()),
-		(@BokId,80, GETDATE())
-SET @KopiaId = SCOPE_IDENTITY();
-
-INSERT INTO Bibliotek.Kopia (BokId, InkopsPris, InkopsAr)
-VALUES (@BokId,80, GETDATE()),
-		(@BokId,80, GETDATE()),
-		(@BokId,80, GETDATE()),
-		(@BokId,80, GETDATE()),
-		(@BokId,80, GETDATE())
-SET @KopiaId = SCOPE_IDENTITY();
-
-INSERT INTO Bibliotek.Kopia (BokId, InkopsPris, InkopsAr)
-VALUES (@BokId,80, GETDATE()),
-		(@BokId,80, GETDATE()),
-		(@BokId,80, GETDATE()),
-		(@BokId,80, GETDATE()),
-		(@BokId,80, GETDATE())
-SET @KopiaId = SCOPE_IDENTITY();
 
 INSERT INTO Bibliotek.Lan (kundId, KopiaId)
 VALUES (@KundId, @KopiaId)
@@ -210,7 +202,11 @@ VALUES (@KundId, @KopiaId)
 SET @LanId = SCOPE_IDENTITY();
 
 
-
+INSERT INTO Bibliotek.Lan (kundId, KopiaId, LaneDatum)
+	VALUES (@KundId,@KopiaId,GETDATE()),
+			(@KundId,@KopiaId,GETDATE()),
+			(@KundId,@KopiaId,GETDATE())
+--SET @LanId = SCOPE_IDENTITY
 
 SELECT * FROM Bibliotek.Kund
 
@@ -247,22 +243,27 @@ CREATE VIEW vAntalKopiorTillgangligaUtlaning AS
 	WHERE Bibliotek.Kopia.[Status] = 1
 	GROUP BY Bibliotek.Bok.Titel
 
-GO
-INSERT INTO Bibliotek.Lan (kundId, KopiaId, LaneDatum)
-	VALUES (1,2,GETDATE()),
-			(2,2,GETDATE()),
-			(3,2,GETDATE())
-
-
-
-
-
 
 GO
-CREATE PROCEDURE Lanare
-@Lan varchar (50)
+CREATE PROCEDURE Utlaning
+@KundId int,
+@KopiaId int
  AS
- INSERT INTO 
- VALUES
+ INSERT INTO Bibliotek.Lan (KundId, KopiaID, LaneDatum)
+ VALUES (@KundId,@KopiaId,GETDATE())
 
- SELECT SCOPE_IDENTITY();
+GO
+CREATE PROCEDURE Tillbakalamning (@KopiaId INT)
+AS
+UPDATE Bibliotek.Kopia
+SET STATUS = 1
+WHERE KopiaId = @KopiaId
+UPDATE Bibliotek.Lan
+SET SparradKund = 1
+WHERE KopiaId = @KopiaId
+
+
+
+
+
+
