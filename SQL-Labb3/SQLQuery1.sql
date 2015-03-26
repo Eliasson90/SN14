@@ -279,7 +279,26 @@ SET SparradKund = 1
 WHERE KopiaId = @KopiaId
 
 
+GO
+ALTER PROCEDURE DeleteKund
+@KundId int 
+AS
+BEGIN
+	BEGIN TRY
+		BEGIN TRANSACTION
 
+		DELETE FROM Bibliotek.Lan
+		WHERE kundId = @KundId
 
+		DELETE FROM Bibliotek.Kund
+		WHERE KundId = @KundId
+
+		COMMIT TRANSACTION
+	END TRY
+	BEGIN CATCH
+		ROLLBACK TRANSACTION
+		THROW;
+	END CATCH
+END
 
 

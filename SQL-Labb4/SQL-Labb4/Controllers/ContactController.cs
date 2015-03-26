@@ -138,14 +138,57 @@ namespace SQL_Labb4.Controllers
         }
 
         [HttpGet]
-        public ActionResult Lana()
+        public ActionResult Lana(int id)
         {
+            IList<LanaBok> lanaBok;
             using (var ctx = new BibliotekDbEntities1())
             {
+                var LanadBok = (from l in ctx.Lans
+                               join p in ctx.Kopias on l.KopiaId equals p.KopiaId
+                               where l.LanId == id & l.LanId != p.KopiaId
+                               select l).Any();
+
+                lanaBok = (from l in ctx.Lans
+                           join p in ctx.Kopias on l.KopiaId equals p.KopiaId
+                           join k in ctx.Kunds on l.kundId equals k.KundId
+                           join b in ctx.Boks on p.BokId equals b.BokId
+                           where k.KundId == id && p.KopiaId == id
+                           select new LanaBok
+                           {
+                               Titel = b.Titel
+                           }).ToList();
 
             }
-            return View();
+            return View(lanaBok);
+        }
+
+        [HttpPost, ActionName("Lana")]
+        public ActionResult LanaConfirmed(int id)
+        {
+            try
+            {
+                using (var ctx = new BibliotekDbEntities1())
+                {
+                    var LanadBok = (from l in ctx.Lans
+                                    join p in ctx.Kopias on l.KopiaId equals p.KopiaId
+                                    where l.LanId == id & l.LanId != p.KopiaId
+                                    select l).Any();
+                    if (LanadBok)
+                    {
+                        throw new InvalidOperationException();
+                    }
+                    ctx.Utlaning(id);
+                }
+
+            }
+            catch (Exception)
+            {
+                TempData["error"] = "Misslyckades att Lana bok";
+                RedirectToAction("LanaBok", new { id = id });
+            }
+
+            return RedirectToAction("Index");
+        }
         }
 
     }
-}
